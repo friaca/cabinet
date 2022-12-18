@@ -18,6 +18,17 @@ defmodule Cabinet.Product do
   def changeset(product, attrs) do
     product
     |> cast(attrs, [:name, :type, :weight, :quantity, :list_by])
-    |> validate_required([:name, :type, :weight, :quantity, :list_by])
+    |> validate_required([:name, :type, :list_by])
+    |> validate_by_listing()
+  end
+
+  defp validate_by_listing(changeset) do
+    case get_field(changeset, :list_by) do
+      "weight" ->
+        changeset |> validate_required(:weight)
+
+      "quantity" ->
+        changeset |> validate_required(:quantity)
+    end
   end
 end
