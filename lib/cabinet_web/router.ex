@@ -20,6 +20,12 @@ defmodule CabinetWeb.Router do
     get "/", PageController, :index
   end
 
+  scope "/product", CabinetWeb do
+    pipe_through :browser
+
+    get "/", ProductController, :index
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", CabinetWeb do
   #   pipe_through :api
