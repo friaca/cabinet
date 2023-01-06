@@ -1,0 +1,33 @@
+<h1>Ver Produto</h1>
+
+<ul>
+
+  <li>
+    <strong>Nome:</strong>
+    <%= @product.name %>
+  </li>
+
+  <li>
+    <strong>Tipo:</strong>
+    <%= @product.type %>
+  </li>
+
+  <li>
+    <strong>Peso:</strong>
+    <%= @product.weight %>
+  </li>
+
+  <li>
+    <strong>Quantidade:</strong>
+    <%= @product.quantity %>
+  </li>
+
+  <li>
+    <strong>Listar por:</strong>
+    <%= @product.list_by %>
+  </li>
+
+</ul>
+
+<span><%= link "Editar", to: Routes.product_path(@conn, :edit, @product) %></span> |
+<span><%= link "Voltar", to: Routes.product_path(@conn, :index) %></span>

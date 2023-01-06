@@ -1,0 +1,33 @@
+<h1>Produtos</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Tipo</th>
+      <th>Peso</th>
+      <th>Quantidade</th>
+      <th>Listar por</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for product <- @products do %>
+    <tr>
+      <td><%= product.name %></td>
+      <td><%= product.type %></td>
+      <td><%= product.weight %></td>
+      <td><%= product.quantity %></td>
+      <td><%= product.list_by %></td>
+
+      <td>
+        <span><%= link "Ver", to: Routes.product_path(@conn, :show, product) %></span>
+        <span><%= link "Editar", to: Routes.product_path(@conn, :edit, product) %></span>
+        <span><%= link "Deletar", to: Routes.product_path(@conn, :delete, product), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "Novo Produto", to: Routes.product_path(@conn, :new) %></span>

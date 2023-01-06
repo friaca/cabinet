@@ -1,0 +1,55 @@
+<.form let={f} for={@changeset} action={@action}>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Opa, alguma coisa deu errado! Por favor, veja os erros abaixo.</p>
+    </div>
+  <% end %>
+
+  <!--<%= label f, :type %>-->
+  <label for="product_type">Tipo</label>
+  <%= select f, :type, Cabinet.Warehouse.Product.select_options(:type), prompt: "Escolha um valor" %>
+  <%= error_tag f, :type %>
+
+
+  <label for="product_name">Nome</label>
+  <%= text_input f, :name %>
+  <%= error_tag f, :name %>
+
+  <label for="product_list_by">Listar por</label>
+  <%= select f, :list_by, Cabinet.Warehouse.Product.select_options(:list_by), prompt: "Escolha um valor" %>
+  <%= error_tag f, :list_by %>
+
+  <label for="product_weight">Peso (Kg)</label>
+  <%= number_input f, :weight, step: "any" %>
+  <%= error_tag f, :weight %>
+
+  <label for="product_quantity">Quantidade</label>
+  <%= number_input f, :quantity %>
+  <%= error_tag f, :quantity %>
+
+  <div>
+    <%= submit "Salvar" %>
+  </div>
+</.form>
+
+<script>
+const weightInput = document.querySelector('#product_weight')
+const quantityInput = document.querySelector('#product_quantity')
+const selectListBy = document.querySelector('#product_list_by')
+
+function toggleInputListBy() {
+  if (selectListBy.value === 'weight') {
+    quantityInput.disabled = true;
+    weightInput.disabled = false;
+  } else if (selectListBy.value === 'quantity') {
+    quantityInput.disabled = false;
+    weightInput.disabled = true;
+  } else {
+    quantityInput.disabled = false;
+    weightInput.disabled = false;
+  }
+}
+
+toggleInputListBy()
+selectListBy.addEventListener('change', toggleInputListBy)
+</script>
