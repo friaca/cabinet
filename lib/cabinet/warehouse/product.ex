@@ -29,8 +29,6 @@ defmodule Cabinet.Warehouse.Product do
   end
 
   defp validate_by_listing(changeset) do
-    IO.inspect(changeset)
-
     case get_field(changeset, :list_by) do
       :weight ->
         changeset |> validate_required(:weight, message: "Não pode ficar em branco.")
