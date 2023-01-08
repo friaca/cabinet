@@ -5,10 +5,10 @@ defmodule Cabinet.Warehouse.Product do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "products" do
-    field :list_by, Ecto.Enum, values: ["Peso": "weight", "Quantidade": "quantity"]
+    field :list_by, Ecto.Enum, values: [:weight, :quantity]
     field :name, :string
     field :quantity, :integer
-    field :type, Ecto.Enum, values: ["Matéria prima": "raw", "Final": "final"]
+    field :type, Ecto.Enum, values: [:raw,:final]
     field :weight, :decimal
 
     timestamps()

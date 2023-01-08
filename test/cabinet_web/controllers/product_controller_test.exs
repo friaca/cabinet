@@ -10,14 +10,14 @@ defmodule CabinetWeb.ProductControllerTest do
   describe "index" do
     test "lists all products", %{conn: conn} do
       conn = get(conn, Routes.product_path(conn, :index))
-      assert html_response(conn, 200) =~ "Listing Products"
+      assert html_response(conn, 200) =~ "Produtos"
     end
   end
 
   describe "new product" do
     test "renders form", %{conn: conn} do
       conn = get(conn, Routes.product_path(conn, :new))
-      assert html_response(conn, 200) =~ "New Product"
+      assert html_response(conn, 200) =~ "Novo Produto"
     end
   end
 
@@ -29,12 +29,12 @@ defmodule CabinetWeb.ProductControllerTest do
       assert redirected_to(conn) == Routes.product_path(conn, :show, id)
 
       conn = get(conn, Routes.product_path(conn, :show, id))
-      assert html_response(conn, 200) =~ "Show Product"
+      assert html_response(conn, 200) =~ "Ver Produto"
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.product_path(conn, :create), product: @invalid_attrs)
-      assert html_response(conn, 200) =~ "New Product"
+      assert html_response(conn, 200) =~ "Novo Produto"
     end
   end
 
@@ -43,7 +43,7 @@ defmodule CabinetWeb.ProductControllerTest do
 
     test "renders form for editing chosen product", %{conn: conn, product: product} do
       conn = get(conn, Routes.product_path(conn, :edit, product))
-      assert html_response(conn, 200) =~ "Edit Product"
+      assert html_response(conn, 200) =~ "Editar Produto"
     end
   end
 
@@ -60,7 +60,7 @@ defmodule CabinetWeb.ProductControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn, product: product} do
       conn = put(conn, Routes.product_path(conn, :update, product), product: @invalid_attrs)
-      assert html_response(conn, 200) =~ "Edit Product"
+      assert html_response(conn, 200) =~ "Editar Produto"
     end
   end
 
