@@ -14,9 +14,9 @@ defmodule Cabinet.Warehouse.Product do
     timestamps()
   end
 
-  def select_options(field) do
+  def select_options(field, form) do
     Enum.reduce(Ecto.Enum.mappings(Cabinet.Warehouse.Product, field), [], fn {key, value}, acc ->
-      [[key: to_string(key), value: value] | acc]
+      [[key: to_string(key), value: value, selected: Map.fetch!(form.data, field) == key] | acc]
     end)
   end
 

@@ -7,7 +7,7 @@
 
   <!--<%= label f, :type %>-->
   <label for="product_type">Tipo</label>
-  <%= select f, :type, Cabinet.Warehouse.Product.select_options(:type), prompt: "Escolha um valor" %>
+  <%= select f, :type, Cabinet.Warehouse.Product.select_options(:type, f), prompt: "Escolha um valor" %>
   <%= error_tag f, :type %>
 
 
@@ -16,37 +16,41 @@
   <%= error_tag f, :name %>
 
   <label for="product_list_by">Listar por</label>
-  <%= select f, :list_by, Cabinet.Warehouse.Product.select_options(:list_by), prompt: "Escolha um valor" %>
+  <%= select f, :list_by, Cabinet.Warehouse.Product.select_options(:list_by, f), prompt: "Escolha um valor" %>
   <%= error_tag f, :list_by %>
 
-  <label for="product_weight">Peso (Kg)</label>
-  <%= number_input f, :weight, step: "any" %>
-  <%= error_tag f, :weight %>
+  <div id="weight_wrapper">
+    <label for="product_weight">Peso (Kg)</label>
+    <%= number_input f, :weight, step: "any" %>
+    <%= error_tag f, :weight %>
+  </div>
 
-  <label for="product_quantity">Quantidade</label>
-  <%= number_input f, :quantity %>
-  <%= error_tag f, :quantity %>
+  <div id="quantity_wrapper">
+    <label for="product_quantity">Quantidade</label>
+    <%= number_input f, :quantity %>
+    <%= error_tag f, :quantity %>
+  </div>
 
   <div>
-    <%= submit "Salvar" %>
+    <button class="bg-blue-600" type="submit">Salvar</button>
   </div>
 </.form>
 
 <script>
-const weightInput = document.querySelector('#product_weight')
-const quantityInput = document.querySelector('#product_quantity')
+const weightInput = document.querySelector('#weight_wrapper')
+const quantityInput = document.querySelector('#quantity_wrapper')
 const selectListBy = document.querySelector('#product_list_by')
 
 function toggleInputListBy() {
   if (selectListBy.value === 'weight') {
-    quantityInput.disabled = true;
-    weightInput.disabled = false;
+    quantityInput.classList.add('hidden');
+    weightInput.classList.remove('hidden');
   } else if (selectListBy.value === 'quantity') {
-    quantityInput.disabled = false;
-    weightInput.disabled = true;
+    quantityInput.classList.remove('hidden');
+    weightInput.classList.add('hidden');
   } else {
-    quantityInput.disabled = false;
-    weightInput.disabled = false;
+    quantityInput.classList.add('hidden');
+    weightInput.classList.add('hidden');
   }
 }
 
