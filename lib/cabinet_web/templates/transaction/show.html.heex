@@ -1,28 +1,28 @@
-<h1>Show Transaction</h1>
+<h1>Ver Transação</h1>
 
 <ul>
 
   <li>
-    <strong>Date:</strong>
+    <strong>Data:</strong>
     <%= @transaction.date %>
   </li>
 
   <li>
-    <strong>Amount:</strong>
+    <strong>Quantidade:</strong>
     <%= @transaction.amount %>
   </li>
 
   <li>
-    <strong>Product:</strong>
+    <strong>Produto:</strong>
     <%= Cabinet.Warehouse.get_product!(@transaction.product_id).name  %>
   </li>
 
   <li>
-    <strong>Notes:</strong>
+    <strong>Notas:</strong>
     <%= @transaction.notes %>
   </li>
 
 </ul>
 
-<span><%= link "Edit", to: Routes.transaction_path(@conn, :edit, @transaction) %></span> |
-<span><%= link "Back", to: Routes.transaction_path(@conn, :index) %></span>
+<span><%= link "Editar", to: Routes.transaction_path(@conn, :edit, @transaction) %></span> |
+<span><%= link "Voltar", to: Routes.transaction_path(@conn, :index) %></span>
