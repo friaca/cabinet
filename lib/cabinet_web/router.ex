@@ -22,6 +22,7 @@ defmodule CabinetWeb.Router do
 
     get "/", PageController, :index
     resources "/products", ProductController
+    resources "/transactions", TransactionController
   end
 
   # Other scopes may use custom stacks.

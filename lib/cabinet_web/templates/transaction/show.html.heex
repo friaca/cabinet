@@ -1,0 +1,23 @@
+<h1>Show Transaction</h1>
+
+<ul>
+
+  <li>
+    <strong>Date:</strong>
+    <%= @transaction.date %>
+  </li>
+
+  <li>
+    <strong>Amount:</strong>
+    <%= @transaction.amount %>
+  </li>
+
+  <li>
+    <strong>Notes:</strong>
+    <%= @transaction.notes %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.transaction_path(@conn, :edit, @transaction) %></span> |
+<span><%= link "Back", to: Routes.transaction_path(@conn, :index) %></span>
