@@ -30,10 +30,10 @@ defmodule Cabinet.Warehouse.Product do
 
   defp validate_by_listing(changeset) do
     case get_field(changeset, :list_by) do
-      :weight ->
+      :Peso ->
         changeset |> validate_required(:weight, message: "Não pode ficar em branco.")
 
-      :quantity ->
+      :Quantidade ->
         changeset |> validate_required(:quantity, message: "Não pode ficar em branco.")
 
       _ -> changeset
