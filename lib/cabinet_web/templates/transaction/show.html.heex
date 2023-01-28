@@ -13,6 +13,11 @@
   </li>
 
   <li>
+    <strong>Product:</strong>
+    <%= Cabinet.Warehouse.get_product!(@transaction.product_id).name  %>
+  </li>
+
+  <li>
     <strong>Notes:</strong>
     <%= @transaction.notes %>
   </li>
