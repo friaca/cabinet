@@ -146,9 +146,21 @@ defmodule Cabinet.Warehouse do
 
   """
   def create_transaction(attrs \\ %{}) do
-    %Transaction{}
-    |> Transaction.changeset(attrs)
-    |> Repo.insert()
+    transaction = %Transaction{}
+      |> Transaction.changeset(attrs)
+      |> Repo.insert()
+
+    product = Map.get(attrs, "product_id") |> get_product!()
+    {amount, _} = Map.get(attrs, "amount") |> Decimal.parse()
+
+    case Map.fetch!(product, :list_by) do
+      :Quantidade ->
+        product |> update_product(%{quantity: Decimal.add(product.quantity, amount)})
+      :Peso ->
+        product |> update_product(%{weight: Decimal.add(product.weight, amount)})
+    end
+
+    transaction
   end
 
   @doc """
@@ -164,6 +176,23 @@ defmodule Cabinet.Warehouse do
 
   """
   def update_transaction(%Transaction{} = transaction, attrs) do
+    product = Map.get(attrs, "product_id") |> get_product!()
+    {op, difference} = case { Map.get(transaction, :amount), Map.get(attrs, "amount") } do
+      {prev, curr} when prev > curr -> {:sub, Decimal.sub(prev, curr)}
+      {prev, curr} when prev < curr -> {:add, Decimal.sub(curr, prev)}
+    end
+
+    case {op, Map.fetch!(product, :list_by)} do
+      {:add, :Quantidade} ->
+        product |> update_product(%{quantity: Decimal.add(product.quantity, difference)})
+      {:sub, :Quantidade} ->
+        product |> update_product(%{quantity: Decimal.sub(product.quantity, difference)})
+      {:add, :Peso} ->
+        product |> update_product(%{weight: Decimal.add(product.weight, difference)})
+      {:sub, :Peso} ->
+        product |> update_product(%{weight: Decimal.sub(product.weight, difference)})
+    end
+
     transaction
     |> Transaction.changeset(attrs)
     |> Repo.update()

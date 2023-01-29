@@ -32,7 +32,7 @@ defmodule Cabinet.Warehouse.Transaction do
   def changeset(transaction, attrs) do
     transaction
     |> cast(attrs, [:date, :amount, :notes, :product_id])
-    |> validate_required([:date, :amount, :notes, :product_id])
+    |> validate_required([:date, :amount, :product_id])
     |> validate_amount(attrs)
   end
 
