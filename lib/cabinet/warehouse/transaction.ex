@@ -42,8 +42,8 @@ defmodule Cabinet.Warehouse.Transaction do
 
     validate_change(changeset, :amount, fn field, value ->
       case Map.fetch!(product, :list_by) do
-        :Quantidade -> if is_valid_integer(value) do [] else [{field, "Couldn't cast `amount` to an integer"}] end
-        :Peso -> []
+        :quantity -> if is_valid_integer(value) do [] else [{field, "Couldn't cast `amount` to an integer"}] end
+        :weight -> []
       end
     end)
   end

@@ -15,10 +15,10 @@
 <%= for product <- @products do %>
     <tr>
       <td><%= product.name %></td>
-      <td><%= product.type %></td>
+      <td><%= Cabinet.Warehouse.Product.translate_enum(:type, product.type) %></td>
       <td><%= product.weight %></td>
       <td><%= product.quantity %></td>
-      <td><%= product.list_by %></td>
+      <td><%= Cabinet.Warehouse.Product.translate_enum(:list_by, product.list_by) %></td>
 
       <td>
         <span><%= link "Ver", to: Routes.product_path(@conn, :show, product) %></span>

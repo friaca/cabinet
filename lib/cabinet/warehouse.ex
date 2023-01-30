@@ -154,9 +154,9 @@ defmodule Cabinet.Warehouse do
     {amount, _} = Map.get(attrs, "amount") |> Decimal.parse()
 
     case Map.fetch!(product, :list_by) do
-      :Quantidade ->
+      :quantity ->
         product |> update_product(%{quantity: Decimal.add(product.quantity, amount)})
-      :Peso ->
+      :weight ->
         product |> update_product(%{weight: Decimal.add(product.weight, amount)})
     end
 
@@ -183,13 +183,13 @@ defmodule Cabinet.Warehouse do
     end
 
     case {op, Map.fetch!(product, :list_by)} do
-      {:add, :Quantidade} ->
+      {:add, :quantity} ->
         product |> update_product(%{quantity: Decimal.add(product.quantity, difference)})
-      {:sub, :Quantidade} ->
+      {:sub, :quantity} ->
         product |> update_product(%{quantity: Decimal.sub(product.quantity, difference)})
-      {:add, :Peso} ->
+      {:add, :weight} ->
         product |> update_product(%{weight: Decimal.add(product.weight, difference)})
-      {:sub, :Peso} ->
+      {:sub, :weight} ->
         product |> update_product(%{weight: Decimal.sub(product.weight, difference)})
     end
 
