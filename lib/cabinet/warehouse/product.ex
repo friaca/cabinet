@@ -26,8 +26,8 @@ defmodule Cabinet.Warehouse.Product do
   end
 
   def select_options(field, form) do
-    Enum.reduce(enum_mappings()[field], [], fn {enum, translation}, acc ->
-      [[key: to_string(translation), value: enum, selected: Map.fetch!(form.data, field) == translation] | acc]
+    Enum.map(enum_mappings()[field], fn {atom, translation} ->
+      [key: to_string(translation), value: atom, selected: Map.fetch!(form.data, field) == translation]
     end)
   end
 
