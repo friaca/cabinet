@@ -133,6 +133,20 @@ defmodule Cabinet.Warehouse do
   """
   def get_transaction!(id), do: Repo.get!(Transaction, id)
 
+
+  @doc """
+  Gets all transactions of a product
+
+  ## Examples
+
+    iex> get_transactions_by_product_id("0000-000-000-0000")
+    [%Transaction{}]
+  """
+  def get_transactions_by_product_id(product_id) do
+    query = from t in Transaction, where: t.product_id == ^product_id, order_by: [desc: t.date]
+    Repo.all(query)
+  end
+
   @doc """
   Creates a transaction.
 
