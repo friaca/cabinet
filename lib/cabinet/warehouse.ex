@@ -204,7 +204,18 @@ defmodule Cabinet.Warehouse do
 
   """
   def delete_transaction(%Transaction{} = transaction) do
-    Repo.delete(transaction)
+    amount = Map.get(transaction, :amount) |> Decimal.mult(-1)
+    product_changeset = amount
+    |> Product.get_product_changeset_by_transaction(Map.get(transaction, :product_id))
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:product, product_changeset)
+    |> Ecto.Multi.delete(:transaction, transaction)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{transaction: transaction, product: _product}} -> {:ok, transaction}
+      {:error, error} -> Repo.rollback(error)
+    end
   end
 
   @doc """
