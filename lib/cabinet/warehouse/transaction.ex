@@ -66,12 +66,9 @@ defmodule Cabinet.Warehouse.Transaction do
 
   def get_amount_difference(amount1, amount2) do
     cond do
-      amount2 > amount1 ->
-        abs(amount2 - amount1)
-      amount2 < amount1 ->
-        abs(amount2 - amount1) * -1
-      amount2 == amount1 ->
-        amount1
+      amount2 > amount1 -> abs(amount2 - amount1)
+      amount2 < amount1 -> abs(amount2 - amount1) * -1
+      amount2 == amount1 -> amount1
     end
   end
 end
