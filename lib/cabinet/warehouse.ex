@@ -147,14 +147,14 @@ defmodule Cabinet.Warehouse do
 
   """
   def create_transaction(attrs \\ %{}) do
-    transaction = %Transaction{}
+    transaction_changeset = %Transaction{}
     |> Transaction.changeset(attrs)
 
-    product = Product.get_product_changeset_by_transaction(Map.get(attrs, "amount"), Map.get(attrs, "product_id"))
+    product_changeset = Product.get_changeset_by_transaction(Map.get(attrs, "amount"), Map.get(attrs, "product_id"))
 
     Ecto.Multi.new()
-    |> Ecto.Multi.insert(:transaction, transaction)
-    |> Ecto.Multi.update(:product, product)
+    |> Ecto.Multi.insert(:transaction, transaction_changeset)
+    |> Ecto.Multi.update(:product, product_changeset)
     |> Repo.transaction()
     |> case do
       {:ok, %{transaction: transaction, product: _product}} -> {:ok, transaction}
@@ -179,11 +179,11 @@ defmodule Cabinet.Warehouse do
     |> Transaction.changeset(attrs)
 
     amount_difference = Transaction.get_amount_difference(Map.get(transaction, :amount), Map.get(attrs, "amount"))
-    product = Product.get_product_changeset_by_transaction(amount_difference, Map.get(attrs, "product_id"))
+    product_changeset = Product.get_changeset_by_transaction(amount_difference, Map.get(attrs, "product_id"))
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:transaction, transaction_changeset)
-    |> Ecto.Multi.update(:product, product)
+    |> Ecto.Multi.update(:product, product_changeset)
     |> Repo.transaction()
     |> case do
       {:ok, %{transaction: transaction, product: _product}} -> {:ok, transaction}
@@ -206,7 +206,7 @@ defmodule Cabinet.Warehouse do
   def delete_transaction(%Transaction{} = transaction) do
     amount = Map.get(transaction, :amount) |> Decimal.mult(-1)
     product_changeset = amount
-    |> Product.get_product_changeset_by_transaction(Map.get(transaction, :product_id))
+    |> Product.get_changeset_by_transaction(Map.get(transaction, :product_id))
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:product, product_changeset)

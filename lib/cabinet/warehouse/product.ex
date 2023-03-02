@@ -66,7 +66,7 @@ defmodule Cabinet.Warehouse.Product do
     { list_by, Map.get(product, list_by) + transaction_amount_cast }
   end
 
-  def get_product_changeset_by_transaction(transaction_amount, product_id) do
+  def get_changeset_by_transaction(transaction_amount, product_id) do
     product = Cabinet.Warehouse.get_product!(product_id)
     { field, difference } = get_product_difference(transaction_amount, product)
 
