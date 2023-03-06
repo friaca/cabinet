@@ -40,8 +40,10 @@ defmodule Cabinet.Warehouse.Product do
   end
 
   defp validate_by_listing(changeset) do
-    changeset
-    |> validate_required(get_field(changeset, :list_by), message: "Não pode ficar em branco.")
+    case get_field(changeset, :list_by, nil) do
+      nil -> changeset
+      field -> changeset |> validate_required(field, message: "Não pode ficar em branco.")
+    end
   end
 
   defp cast_to_integer?(product), do: Map.get(product, :list_by) == :quantity
