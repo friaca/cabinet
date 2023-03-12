@@ -19,19 +19,21 @@
     <%= error_tag f, :name %>
 
     <label for="product_list_by">Listar por</label>
-    <%= select f, :list_by, Cabinet.Warehouse.Product.select_options(:list_by, f), prompt: "Escolha um valor" %>
+    <%= select f, :list_by, Cabinet.Warehouse.Product.select_options(:list_by, f), prompt: "Escolha um valor", phx_change: "list_by_change" %>
     <%= error_tag f, :list_by %>
 
-    <div id="weight_wrapper">
-      <label for="product_weight">Peso (Kg/L)</label>
-      <%= number_input f, :weight, step: "any" %>
-      <%= error_tag f, :weight %>
-    </div>
+    <div id="list_by_inputs">
+      <div id="weight_wrapper" {hidden_if_not_equals(@list_by, :quantity)}>
+        <label for="product_weight">Peso (Kg/L)</label>
+        <%= number_input f, :weight, step: "any" %>
+        <%= error_tag f, :weight %>
+      </div>
 
-    <div id="quantity_wrapper">
-      <label for="product_quantity">Quantidade</label>
-      <%= number_input f, :quantity %>
-      <%= error_tag f, :quantity %>
+      <div id="quantity_wrapper" {hidden_if_not_equals(@list_by, :quantity)}>
+        <label for="product_quantity">Quantidade</label>
+        <%= number_input f, :quantity %>
+        <%= error_tag f, :quantity %>
+      </div>
     </div>
 
     <div>

@@ -27,6 +27,18 @@ defmodule CabinetWeb.ProductLive.FormComponent do
     save_product(socket, socket.assigns.action, product_params)
   end
 
+  def handle_event("list_by_change", %{"product" => listing}, socket) do
+    {:noreply, push_event(socket, "show-product-listing", %{"field" => Map.get(listing, "list_by")})}
+  end
+
+  def hidden_if_not_equals(original, term) do
+    if original == term do
+      [class: ""]
+    else
+      [class: "hidden"]
+    end
+  end
+
   defp save_product(socket, :edit, product_params) do
     case Warehouse.update_product(socket.assigns.product, product_params) do
       {:ok, _product} ->

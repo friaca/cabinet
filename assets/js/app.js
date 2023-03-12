@@ -30,6 +30,19 @@ topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
 window.addEventListener("phx:page-loading-start", info => topbar.show())
 window.addEventListener("phx:page-loading-stop", info => topbar.hide())
 
+window.addEventListener("phx:show-product-listing", ({ detail }) => {
+  const inputs = document.querySelector("#list_by_inputs").children
+
+  for (const input of inputs) {
+    if (input.id !== `${detail.field}_wrapper`) {
+      input.classList.add('hidden');
+      continue;
+    }
+
+    input.classList.remove('hidden');
+  }
+})
+
 // connect if there are any LiveViews on the page
 liveSocket.connect()
 
