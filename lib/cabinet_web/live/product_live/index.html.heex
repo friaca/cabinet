@@ -1,4 +1,4 @@
-<h1>Listing Products</h1>
+<h1>Produtos</h1>
 
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.product_index_path(@socket, :index)}>
@@ -29,10 +29,10 @@
     <%= for product <- @products do %>
       <tr id={"product-#{product.id}"}>
         <td><%= product.name %></td>
-        <td><%= product.type %></td>
+        <td><%= Cabinet.Warehouse.Product.translate_enum(:type, product.type) %></td>
         <td><%= product.weight %></td>
         <td><%= product.quantity %></td>
-        <td><%= product.list_by %></td>
+        <td><%= Cabinet.Warehouse.Product.translate_enum(:list_by, product.list_by) %></td>
 
         <td>
           <span><%= live_redirect "Ver", to: Routes.product_show_path(@socket, :show, product) %></span>
@@ -44,4 +44,4 @@
   </tbody>
 </table>
 
-<span><%= live_patch "New Product", to: Routes.product_index_path(@socket, :new) %></span>
+<span><%= live_patch "Novo Produto", to: Routes.product_index_path(@socket, :new) %></span>

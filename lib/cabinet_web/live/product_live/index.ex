@@ -28,7 +28,7 @@ defmodule CabinetWeb.ProductLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listando Produtos")
+    |> assign(:page_title, "Produtos ")
     |> assign(:product, nil)
   end
 

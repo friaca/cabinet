@@ -22,7 +22,7 @@
 
   <li>
     <strong>Tipo:</strong>
-    <%= @product.type %>
+    <%= Cabinet.Warehouse.Product.translate_enum(:type, @product.type) %>
   </li>
 
   <li>
@@ -37,7 +37,7 @@
 
   <li>
     <strong>Listagem:</strong>
-    <%= @product.list_by %>
+    <%= Cabinet.Warehouse.Product.translate_enum(:list_by, @product.list_by) %>
   </li>
 
 </ul>
