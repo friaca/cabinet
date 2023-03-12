@@ -87,7 +87,16 @@ defmodule Cabinet.Warehouse do
 
   """
   def delete_product(%Product{} = product) do
-    Repo.delete(product)
+    transactions_query = from t in Cabinet.Warehouse.Transaction, where: t.product_id == ^product.id
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.delete_all(:transactions, transactions_query)
+    |> Ecto.Multi.delete(:product, product)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{transactions: _transactions, product: product}} -> {:ok, product}
+      {:error, error} -> Repo.rollback(error)
+    end
   end
 
   @doc """
