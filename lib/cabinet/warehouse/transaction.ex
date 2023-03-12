@@ -32,10 +32,11 @@ defmodule Cabinet.Warehouse.Transaction do
   def changeset(transaction, attrs) do
     transaction
     |> cast(attrs, [:date, :amount, :notes, :product_id])
-    |> validate_required([:date, :amount, :product_id])
+    |> validate_required([:date, :amount, :product_id], message: "Não pode ficar em branco.")
     |> validate_amount(attrs)
   end
 
+  defp validate_amount(%{valid?: false} = changeset, _attrs), do: changeset
   defp validate_amount(changeset, attrs) when map_size(attrs) == 0 do changeset end
   defp validate_amount(changeset, attrs) when map_size(attrs) > 0 do
     product = Cabinet.Warehouse.get_product!(Map.fetch!(attrs, "product_id"))
@@ -46,5 +47,28 @@ defmodule Cabinet.Warehouse.Transaction do
         :weight -> []
       end
     end)
+  end
+
+  def get_amount_difference(%Decimal{} = amount1, amount2) do
+    { amount2, _ } = Decimal.parse(amount2)
+
+    case Decimal.compare(amount1, amount2) do
+      :gt -> Decimal.sub(amount2, amount1)
+        |> Decimal.abs()
+        |> Decimal.mult(-1)
+
+      :lt -> Decimal.sub(amount2, amount1)
+        |> Decimal.abs()
+
+      :eq -> amount1
+    end
+  end
+
+  def get_amount_difference(amount1, amount2) do
+    cond do
+      amount2 > amount1 -> abs(amount2 - amount1)
+      amount2 < amount1 -> abs(amount2 - amount1) * -1
+      amount2 == amount1 -> amount1
+    end
   end
 end

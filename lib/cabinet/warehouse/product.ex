@@ -50,4 +50,34 @@ defmodule Cabinet.Warehouse.Product do
       _ -> changeset
     end
   end
+
+  defp cast_to_integer?(product), do: Map.get(product, :list_by) == :quantity
+
+  def cast_listing(product, value) when is_binary(value) do
+    { decimal, _ } = Decimal.parse(value)
+    cast_listing(product, decimal)
+  end
+
+  def cast_listing(product, value) do
+    if cast_to_integer?(product) do
+      Decimal.to_integer(value)
+    else
+      value
+    end
+  end
+
+  defp get_product_difference(transaction_amount, product) do
+    list_by = Map.get(product, :list_by)
+    transaction_amount_cast = product |> cast_listing(transaction_amount)
+
+    { list_by, Map.get(product, list_by) + transaction_amount_cast }
+  end
+
+  def get_changeset_by_transaction(transaction_amount, product_id) do
+    product = Cabinet.Warehouse.get_product!(product_id)
+    { field, difference } = get_product_difference(transaction_amount, product)
+
+    product
+    |> Ecto.Changeset.cast(%{field => difference}, [field])
+  end
 end
