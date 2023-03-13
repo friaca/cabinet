@@ -14,21 +14,40 @@ defmodule Cabinet.Warehouse.Product do
     timestamps()
   end
 
-  defp enum_mappings do
+  defp enum_mappings(key) do
     %{
-      :list_by => %{:weight => "Peso", :quantity => "Quantidade"},
+      :list_by => %{:weight => "Peso (Kg/L)", :quantity => "Quantidade"},
       :type => %{:raw => "Material", :final => "Final"}
-    }
+    }[key]
+  end
+
+  defp label_mappings(key) do
+    %{
+      :weight => "Peso (Kg/L)",
+      :quantity => "Quantidade"
+    }[key]
   end
 
   def translate_enum(field, value) do
-    enum_mappings()[field][value]
+    enum_mappings(field)[value]
   end
 
-  def select_options(field, form) do
-    Enum.map(enum_mappings()[field], fn {atom, translation} ->
-      [key: to_string(translation), value: atom, selected: Map.fetch!(form.data, field) == translation]
+  def select_options(field, product) do
+    Enum.map(enum_mappings(field), fn {atom, translation} ->
+      [key: to_string(translation), value: atom, selected: Map.fetch!(product, field) == translation]
     end)
+  end
+
+  def is_existing_product?(product), do: product.id != nil
+
+  def get_listing_value(product) do
+    list_by = Map.get(product, :list_by)
+    Map.get(product, list_by)
+  end
+
+  def get_listing_label(product) do
+    Map.get(product, :list_by)
+    |> label_mappings()
   end
 
   @doc false

@@ -7,7 +7,7 @@
 
   <!--<%= label f, :type %>-->
   <label for="product_type">Tipo</label>
-  <%= select f, :type, Cabinet.Warehouse.Product.select_options(:type, f), prompt: "Escolha um valor" %>
+  <%= select f, :type, Cabinet.Warehouse.Product.select_options(:type, f.data), prompt: "Escolha um valor" %>
   <%= error_tag f, :type %>
 
 
@@ -16,18 +16,18 @@
   <%= error_tag f, :name %>
 
   <label for="product_list_by">Listar por</label>
-  <%= select f, :list_by, Cabinet.Warehouse.Product.select_options(:list_by, f), prompt: "Escolha um valor" %>
+  <%= select f, :list_by, Cabinet.Warehouse.Product.select_options(:list_by, f.data), prompt: "Escolha um valor", disabled: Cabinet.Warehouse.Product.is_existing_product?(f.data) %>
   <%= error_tag f, :list_by %>
 
   <div id="weight_wrapper">
     <label for="product_weight">Peso (Kg/L)</label>
-    <%= number_input f, :weight, step: "any" %>
+    <%= number_input f, :weight, step: "any", disabled: Cabinet.Warehouse.Product.is_existing_product?(f.data) %>
     <%= error_tag f, :weight %>
   </div>
 
   <div id="quantity_wrapper">
     <label for="product_quantity">Quantidade</label>
-    <%= number_input f, :quantity %>
+    <%= number_input f, :quantity, disabled: Cabinet.Warehouse.Product.is_existing_product?(f.data) %>
     <%= error_tag f, :quantity %>
   </div>
 
