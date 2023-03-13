@@ -14,7 +14,9 @@
 
   <li>
     <strong>Produto:</strong>
-    <%= Cabinet.Warehouse.get_product!(@transaction.product_id).name  %>
+    <a href={Routes.product_path(@conn, :show, Cabinet.Warehouse.get_product!(@transaction.product_id))}>
+        <%= Cabinet.Warehouse.get_product!(@transaction.product_id).name || "" %>
+    </a>
   </li>
 
   <li>

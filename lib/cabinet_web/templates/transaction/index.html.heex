@@ -15,7 +15,9 @@
 <%= for transaction <- @transactions do %>
     <tr>
       <td><%= transaction.date %></td>
-      <td><%= Cabinet.Warehouse.get_product!(transaction.product_id).name || "" %></td>
+      <td><a href={Routes.product_path(@conn, :show, Cabinet.Warehouse.get_product!(transaction.product_id))}>
+        <%= Cabinet.Warehouse.get_product!(transaction.product_id).name || "" %>
+      </a></td>
       <td><%= transaction.amount %></td>
       <td><%= transaction.notes %></td>
 
