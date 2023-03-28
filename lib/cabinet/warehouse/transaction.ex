@@ -13,10 +13,22 @@ defmodule Cabinet.Warehouse.Transaction do
     timestamps()
   end
 
+
+  def get_products(form) do
+    products = Cabinet.Warehouse.list_products()
+    options = Enum.reduce(products, [], fn product, acc ->
+      [[key: product.name, value: product.id, selected: Map.fetch!(form.data, :product_id) == product.id] | acc]
+    end)
+
+    [[key: "Select a value...", value: "Select a value..."] | options]
+  end
+
   @doc false
   def changeset(transaction, attrs) do
+    IO.inspect(attrs)
     transaction
-    |> cast(attrs, [:date, :amount, :notes])
-    |> validate_required([:date, :amount, :notes])
+    |> cast(attrs, [:date, :amount, :notes, :product_id])
+    |> validate_required([:date, :amount, :product_id])
+    |> validate_format(:product_id, ~r/^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$/)
   end
 end
