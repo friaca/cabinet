@@ -64,4 +64,62 @@ defmodule Cabinet.WarehouseTest do
       assert %Ecto.Changeset{} = Warehouse.change_product(product)
     end
   end
+
+  describe "transactions" do
+    alias Cabinet.Warehouse.Transaction
+
+    import Cabinet.WarehouseFixtures
+
+    @invalid_attrs %{amount: nil, date: nil, notes: nil}
+
+    test "list_transactions/0 returns all transactions" do
+      transaction = transaction_fixture()
+      assert Warehouse.list_transactions() == [transaction]
+    end
+
+    test "get_transaction!/1 returns the transaction with given id" do
+      transaction = transaction_fixture()
+      assert Warehouse.get_transaction!(transaction.id) == transaction
+    end
+
+    test "create_transaction/1 with valid data creates a transaction" do
+      valid_attrs = %{amount: "120.5", date: ~D[2023-03-27], notes: "some notes"}
+
+      assert {:ok, %Transaction{} = transaction} = Warehouse.create_transaction(valid_attrs)
+      assert transaction.amount == Decimal.new("120.5")
+      assert transaction.date == ~D[2023-03-27]
+      assert transaction.notes == "some notes"
+    end
+
+    test "create_transaction/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Warehouse.create_transaction(@invalid_attrs)
+    end
+
+    test "update_transaction/2 with valid data updates the transaction" do
+      transaction = transaction_fixture()
+      update_attrs = %{amount: "456.7", date: ~D[2023-03-28], notes: "some updated notes"}
+
+      assert {:ok, %Transaction{} = transaction} = Warehouse.update_transaction(transaction, update_attrs)
+      assert transaction.amount == Decimal.new("456.7")
+      assert transaction.date == ~D[2023-03-28]
+      assert transaction.notes == "some updated notes"
+    end
+
+    test "update_transaction/2 with invalid data returns error changeset" do
+      transaction = transaction_fixture()
+      assert {:error, %Ecto.Changeset{}} = Warehouse.update_transaction(transaction, @invalid_attrs)
+      assert transaction == Warehouse.get_transaction!(transaction.id)
+    end
+
+    test "delete_transaction/1 deletes the transaction" do
+      transaction = transaction_fixture()
+      assert {:ok, %Transaction{}} = Warehouse.delete_transaction(transaction)
+      assert_raise Ecto.NoResultsError, fn -> Warehouse.get_transaction!(transaction.id) end
+    end
+
+    test "change_transaction/1 returns a transaction changeset" do
+      transaction = transaction_fixture()
+      assert %Ecto.Changeset{} = Warehouse.change_transaction(transaction)
+    end
+  end
 end
