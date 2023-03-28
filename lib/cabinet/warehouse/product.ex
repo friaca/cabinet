@@ -18,6 +18,19 @@ defmodule Cabinet.Warehouse.Product do
   def changeset(product, attrs) do
     product
     |> cast(attrs, [:name, :type, :weight, :quantity, :list_by])
-    |> validate_required([:name, :type, :weight, :quantity, :list_by])
+    |> validate_required([:name, :type, :list_by], message: "Can't be blank.")
+    |> validate_by_listing()
+  end
+
+  defp validate_by_listing(changeset) do
+    case get_field(changeset, :list_by) do
+      :weight ->
+        changeset |> validate_required(:weight, message: "Can't be blank.")
+
+      :quantity ->
+        changeset |> validate_required(:quantity, message: "Can't be blank.")
+
+      _ -> changeset
+    end
   end
 end
