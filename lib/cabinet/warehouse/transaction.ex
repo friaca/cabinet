@@ -15,12 +15,11 @@ defmodule Cabinet.Warehouse.Transaction do
 
 
   def get_products(form) do
-    products = Cabinet.Warehouse.list_products()
-    options = Enum.reduce(products, [], fn product, acc ->
+    products =
+
+    Enum.reduce(Cabinet.Warehouse.list_products(), [], fn product, acc ->
       [[key: product.name, value: product.id, selected: Map.fetch!(form.data, :product_id) == product.id] | acc]
     end)
-
-    [[key: "Select a value...", value: "Select a value..."] | options]
   end
 
   @doc false
