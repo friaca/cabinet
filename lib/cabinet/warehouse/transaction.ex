@@ -15,8 +15,6 @@ defmodule Cabinet.Warehouse.Transaction do
 
 
   def get_products(form) do
-    products =
-
     Enum.reduce(Cabinet.Warehouse.list_products(), [], fn product, acc ->
       [[key: product.name, value: product.id, selected: Map.fetch!(form.data, :product_id) == product.id] | acc]
     end)
