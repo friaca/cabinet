@@ -20,7 +20,13 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:date]} type="date" label="Date" />
-        <.input field={@form[:product_id]} type="select" prompt="Choose a value" label="Product" options={Cabinet.Warehouse.Transaction.get_products(@form)} />
+        <.input
+          field={@form[:product_id]}
+          type="select"
+          prompt="Choose a value"
+          label="Product"
+          options={Cabinet.Warehouse.Transaction.get_products(@form)}
+        />
         <.input field={@form[:amount]} type="number" label="Amount" step="any" />
         <.input field={@form[:notes]} type="text" label="Notes" />
         <:actions>
