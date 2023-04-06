@@ -5,11 +5,15 @@ defmodule CabinetWeb.ProductLive.FormComponent do
 
   @impl true
   def render(assigns) do
+    list_by_value = Map.get(assigns, :form)
+    |> Map.get(:data)
+    |> Map.get(:list_by)
+
+    assigns = assign(assigns, :list_by_value, list_by_value)
     ~H"""
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage product records in your database.</:subtitle>
       </.header>
 
       <.simple_form
@@ -27,15 +31,16 @@ defmodule CabinetWeb.ProductLive.FormComponent do
           prompt="Choose a value"
           options={Ecto.Enum.values(Cabinet.Warehouse.Product, :type)}
         />
-        <.input field={@form[:weight]} type="number" label="Weight" step="any" />
-        <.input field={@form[:quantity]} type="number" label="Quantity" />
         <.input
           field={@form[:list_by]}
           type="select"
           label="List by"
           prompt="Choose a value"
           options={Ecto.Enum.values(Cabinet.Warehouse.Product, :list_by)}
+          phx-change="listing-change"
         />
+        <.input container_class={@list_by_value == :quantity && "hidden"} field={@form[:weight]} type="number" label="Weight" step="any" />
+        <.input container_class={@list_by_value == :weight && "hidden"} field={@form[:quantity]} type="number" label="Quantity" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Product</.button>
         </:actions>
@@ -66,6 +71,10 @@ defmodule CabinetWeb.ProductLive.FormComponent do
 
   def handle_event("save", %{"product" => product_params}, socket) do
     save_product(socket, socket.assigns.action, product_params)
+  end
+
+  def handle_event("listing-change", %{"product" => %{"list_by" => listing}}, socket) do
+    {:noreply, push_event(socket, "listing-change", %{ newListing: listing })}
   end
 
   defp save_product(socket, :edit, product_params) do

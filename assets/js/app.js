@@ -39,3 +39,20 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+window.addEventListener("phx:listing-change", ({detail}) => handleListingChange(detail))
+
+function handleListingChange({ newListing }) {
+  const weightInput = document.querySelector('[phx-feedback-for="product[weight]"]')
+  const quantityInput = document.querySelector('[phx-feedback-for="product[quantity]"]')
+
+  if (newListing === "quantity") {
+    quantityInput.classList.remove('hidden');
+    weightInput.classList.add('hidden');
+  } else if (newListing === "weight") {
+    quantityInput.classList.add('hidden');
+    weightInput.classList.remove('hidden');
+  } else {
+    quantityInput.classList.add('hidden');
+    weightInput.classList.add('hidden');
+  }
+}
