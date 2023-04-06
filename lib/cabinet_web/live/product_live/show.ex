@@ -16,6 +16,6 @@ defmodule CabinetWeb.ProductLive.Show do
      |> assign(:product, Warehouse.get_product!(id))}
   end
 
-  defp page_title(:show), do: "Show Product"
-  defp page_title(:edit), do: "Edit Product"
+  defp page_title(:show), do: "Ver Produto"
+  defp page_title(:edit), do: "Editar Produto"
 end

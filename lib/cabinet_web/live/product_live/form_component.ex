@@ -23,26 +23,26 @@ defmodule CabinetWeb.ProductLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
+        <.input field={@form[:name]} type="text" label="Nome" />
         <.input
           field={@form[:type]}
           type="select"
-          label="Type"
-          prompt="Choose a value"
-          options={Ecto.Enum.values(Cabinet.Warehouse.Product, :type)}
+          label="Tipo"
+          prompt="Escolha um valor"
+          options={(Cabinet.Warehouse.Product.select_options(:type, @form.data))}
         />
         <.input
           field={@form[:list_by]}
           type="select"
-          label="List by"
-          prompt="Choose a value"
-          options={Ecto.Enum.values(Cabinet.Warehouse.Product, :list_by)}
+          label="Listar por"
+          prompt="Escolha um valor"
+          options={(Cabinet.Warehouse.Product.select_options(:list_by, @form.data))}
           phx-change="listing-change"
         />
-        <.input container_class={@list_by_value == :quantity && "hidden"} field={@form[:weight]} type="number" label="Weight" step="any" />
-        <.input container_class={@list_by_value == :weight && "hidden"} field={@form[:quantity]} type="number" label="Quantity" />
+        <.input container_class={@list_by_value == :quantity && "hidden"} field={@form[:weight]} type="number" label="Peso (Kg/L)" step="any" />
+        <.input container_class={@list_by_value == :weight && "hidden"} field={@form[:quantity]} type="number" label="Quantidade" />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Product</.button>
+          <.button phx-disable-with="Salvando...">Salvar Produto</.button>
         </:actions>
       </.simple_form>
     </div>
