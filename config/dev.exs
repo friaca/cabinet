@@ -3,7 +3,7 @@ import Config
 # Configure your database
 config :cabinet, Cabinet.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "goodbye",
   hostname: "localhost",
   database: "cabinet_dev",
   stacktrace: true,
