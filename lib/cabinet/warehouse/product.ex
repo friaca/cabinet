@@ -35,6 +35,6 @@ defmodule Cabinet.Warehouse.Product do
   def changeset(product, attrs) do
     product
     |> cast(attrs, [:name, :type, :weight, :quantity, :list_by])
-    |> validate_required([:name, :type, :weight, :quantity, :list_by])
+    |> validate_required([:name, :type, :list_by])
   end
 end

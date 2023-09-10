@@ -6,6 +6,9 @@ defmodule CabinetWeb.ProductLive.FormComponent do
 
   @impl true
   def render(assigns) do
+    assigns =
+      assign_new(assigns, :selected_listing, fn -> assigns.form.data.list_by end)
+
     ~H"""
     <div>
       <.header>
@@ -34,18 +37,24 @@ defmodule CabinetWeb.ProductLive.FormComponent do
           label="List by"
           prompt="Choose a value"
           options={Product.select_options(:list_by, @form)}
-
+          phx-change="change_listing"
         />
         <.input
           field={@form[:weight]}
           type="number"
           label="Weight"
           step="any"
+          class="hide"
+          id="weight_input"
+          :if={@selected_listing == :weight}
         />
         <.input
           field={@form[:quantity]}
           type="number"
           label="Quantity"
+          class="hide"
+          id="quantity_input"
+          :if={@selected_listing == :quantity}
         />
         <:actions>
           <.button phx-disable-with="Saving...">Save Product</.button>
@@ -79,7 +88,16 @@ defmodule CabinetWeb.ProductLive.FormComponent do
     save_product(socket, socket.assigns.action, product_params)
   end
 
+  def handle_event("change_listing", %{"product" => product_params}, socket) do
+    socket = socket
+      |> assign(:selected_listing, String.to_atom(product_params["list_by"]))
 
+    changeset =
+      socket.assigns.product
+      |> Warehouse.change_product(socket.assigns.form.params)
+
+    {:noreply, assign_form(socket, changeset)}
+  end
 
   defp save_product(socket, :edit, product_params) do
     case Warehouse.update_product(socket.assigns.product, product_params) do
