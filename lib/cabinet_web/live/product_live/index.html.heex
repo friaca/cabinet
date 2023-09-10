@@ -1,8 +1,8 @@
 <.header>
-  Listing Products
+  Produtos
   <:actions>
     <.link patch={~p"/products/new"}>
-      <.button>New Product</.button>
+      <.button>Novo Produto</.button>
     </.link>
   </:actions>
 </.header>
@@ -12,23 +12,23 @@
   rows={@streams.products}
   row_click={fn {_id, product} -> JS.navigate(~p"/products/#{product}") end}
 >
-  <:col :let={{_id, product}} label="Name"><%= product.name %></:col>
-  <:col :let={{_id, product}} label="Type"><%= product.type %></:col>
-  <:col :let={{_id, product}} label="Weight"><%= product.weight %></:col>
-  <:col :let={{_id, product}} label="Quantity"><%= product.quantity %></:col>
-  <:col :let={{_id, product}} label="List by"><%= product.list_by %></:col>
+  <:col :let={{_id, product}} label="Nome"><%= product.name %></:col>
+  <:col :let={{_id, product}} label="Tipo"><%= Product.translate_enum(:type, product.type) %></:col>
+  <:col :let={{_id, product}} label="Peso"><%= product.weight || "—" %></:col>
+  <:col :let={{_id, product}} label="Quantidade"><%= product.quantity || "—" %></:col>
+  <:col :let={{_id, product}} label="Listagem"><%= Product.translate_enum(:list_by, product.list_by) %></:col>
   <:action :let={{_id, product}}>
     <div class="sr-only">
-      <.link navigate={~p"/products/#{product}"}>Show</.link>
+      <.link navigate={~p"/products/#{product}"}>Ver</.link>
     </div>
-    <.link patch={~p"/products/#{product}/edit"}>Edit</.link>
+    <.link patch={~p"/products/#{product}/edit"}>Editar</.link>
   </:action>
   <:action :let={{id, product}}>
     <.link
       phx-click={JS.push("delete", value: %{id: product.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
+      data-confirm="Você tem certeza?"
     >
-      Delete
+      Deletar
     </.link>
   </:action>
 </.table>
