@@ -146,9 +146,21 @@ defmodule Cabinet.Warehouse do
 
   """
   def create_transaction(attrs \\ %{}) do
-    %Transaction{}
-    |> Transaction.changeset(attrs)
-    |> Repo.insert()
+    transaction_changeset =
+      %Transaction{}
+      |> Transaction.changeset(attrs)
+
+    product_changeset =
+      Product.get_changeset_by_transaction(Map.get(attrs, "amount"), Map.get(attrs, "product_id"))
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:transaction, transaction_changeset)
+    |> Ecto.Multi.update(:product, product_changeset)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{transaction: transaction, product: _product}} -> {:ok, transaction}
+      {:error, error} -> Repo.rollback(error)
+    end
   end
 
   @doc """
@@ -164,9 +176,24 @@ defmodule Cabinet.Warehouse do
 
   """
   def update_transaction(%Transaction{} = transaction, attrs) do
-    transaction
-    |> Transaction.changeset(attrs)
-    |> Repo.update()
+    transaction_changeset =
+      transaction
+      |> Transaction.changeset(attrs)
+
+    amount_difference =
+      Transaction.get_amount_difference(Map.get(transaction, :amount), Map.get(attrs, "amount"))
+
+    product_changeset =
+      Product.get_changeset_by_transaction(amount_difference, Map.get(attrs, "product_id"))
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:transaction, transaction_changeset)
+    |> Ecto.Multi.update(:product, product_changeset)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{transaction: transaction, product: _product}} -> {:ok, transaction}
+      {:error, error} -> Repo.rollback(error)
+    end
   end
 
   @doc """
@@ -182,7 +209,20 @@ defmodule Cabinet.Warehouse do
 
   """
   def delete_transaction(%Transaction{} = transaction) do
-    Repo.delete(transaction)
+    amount = Map.get(transaction, :amount) |> Decimal.mult(-1)
+
+    product_changeset =
+      amount
+      |> Product.get_changeset_by_transaction(Map.get(transaction, :product_id))
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(:product, product_changeset)
+    |> Ecto.Multi.delete(:transaction, transaction)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{transaction: transaction, product: _product}} -> {:ok, transaction}
+      {:error, error} -> Repo.rollback(error)
+    end
   end
 
   @doc """
