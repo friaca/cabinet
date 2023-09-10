@@ -24,9 +24,14 @@ defmodule CabinetWeb.Router do
     live "/products", ProductLive.Index, :index
     live "/products/new", ProductLive.Index, :new
     live "/products/:id/edit", ProductLive.Index, :edit
-
     live "/products/:id", ProductLive.Show, :show
     live "/products/:id/show/edit", ProductLive.Show, :edit
+
+    live "/transactions", TransactionLive.Index, :index
+    live "/transactions/new", TransactionLive.Index, :new
+    live "/transactions/:id/edit", TransactionLive.Index, :edit
+    live "/transactions/:id", TransactionLive.Show, :show
+    live "/transactions/:id/show/edit", TransactionLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
