@@ -20,19 +20,19 @@ defmodule CabinetWeb.ProductLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Product")
+    |> assign(:page_title, "Editar Produto")
     |> assign(:product, Warehouse.get_product!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Product")
+    |> assign(:page_title, "Novo Produto")
     |> assign(:product, %Product{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Products")
+    |> assign(:page_title, "Produtos")
     |> assign(:product, nil)
   end
 

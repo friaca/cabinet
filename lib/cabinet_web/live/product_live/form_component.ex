@@ -13,7 +13,6 @@ defmodule CabinetWeb.ProductLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage product records in your database.</:subtitle>
       </.header>
 
       <.simple_form
@@ -28,14 +27,14 @@ defmodule CabinetWeb.ProductLive.FormComponent do
           field={@form[:type]}
           type="select"
           label="Type"
-          prompt="Choose a value"
+          prompt="Escolha um valor"
           options={Product.select_options(:type, @form)}
         />
         <.input
           field={@form[:list_by]}
           type="select"
           label="List by"
-          prompt="Choose a value"
+          prompt="Escolha um valor"
           options={Product.select_options(:list_by, @form)}
           phx-change="change_listing"
         />
@@ -57,7 +56,7 @@ defmodule CabinetWeb.ProductLive.FormComponent do
           :if={@selected_listing == :quantity}
         />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Product</.button>
+          <.button phx-disable-with="Salvando...">Save Product</.button>
         </:actions>
       </.simple_form>
     </div>
@@ -106,7 +105,7 @@ defmodule CabinetWeb.ProductLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Product updated successfully")
+         |> put_flash(:info, "Produto atualizado com sucesso!")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -121,7 +120,7 @@ defmodule CabinetWeb.ProductLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Product created successfully")
+         |> put_flash(:info, "Produto criado com sucesso!")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
