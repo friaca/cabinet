@@ -13,6 +13,9 @@
   row_click={fn {_id, transaction} -> JS.navigate(~p"/transactions/#{transaction}") end}
 >
   <:col :let={{_id, transaction}} label="Date"><%= transaction.date %></:col>
+  <:col :let={{_id, transaction}} label="Product">
+    <%= Warehouse.get_product!(transaction.product_id).name || "" %>
+  </:col>
   <:col :let={{_id, transaction}} label="Amount"><%= transaction.amount %></:col>
   <:col :let={{_id, transaction}} label="Notes"><%= transaction.notes %></:col>
   <:action :let={{_id, transaction}}>
@@ -31,7 +34,12 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="transaction-modal" show on_cancel={JS.patch(~p"/transactions")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="transaction-modal"
+  show
+  on_cancel={JS.patch(~p"/transactions")}
+>
   <.live_component
     module={CabinetWeb.TransactionLive.FormComponent}
     id={@transaction.id || :new}

@@ -10,13 +10,19 @@
 
 <.list>
   <:item title="Date"><%= @transaction.date %></:item>
+  <:item title="Product"><%= Warehouse.get_product!(@transaction.product_id).name %></:item>
   <:item title="Amount"><%= @transaction.amount %></:item>
   <:item title="Notes"><%= @transaction.notes %></:item>
 </.list>
 
 <.back navigate={~p"/transactions"}>Back to transactions</.back>
 
-<.modal :if={@live_action == :edit} id="transaction-modal" show on_cancel={JS.patch(~p"/transactions/#{@transaction}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="transaction-modal"
+  show
+  on_cancel={JS.patch(~p"/transactions/#{@transaction}")}
+>
   <.live_component
     module={CabinetWeb.TransactionLive.FormComponent}
     id={@transaction.id}

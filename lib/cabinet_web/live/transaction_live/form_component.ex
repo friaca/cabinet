@@ -2,6 +2,7 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
   use CabinetWeb, :live_component
 
   alias Cabinet.Warehouse
+  alias Cabinet.Warehouse.Transaction
 
   @impl true
   def render(assigns) do
@@ -19,6 +20,13 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
+        <.input
+          field={@form[:product_id]}
+          type="select"
+          label="Product"
+          options={Transaction.get_products(@form)}
+          prompt="Choose a value"
+        />
         <.input field={@form[:date]} type="date" label="Date" />
         <.input field={@form[:amount]} type="number" label="Amount" step="any" />
         <.input field={@form[:notes]} type="text" label="Notes" />
