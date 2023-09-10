@@ -1,21 +1,21 @@
 <.header>
-  Transaction <%= @transaction.id %>
-  <:subtitle>This is a transaction record from your database.</:subtitle>
+  Transação
+  <:subtitle><%= @transaction.id %></:subtitle>
   <:actions>
     <.link patch={~p"/transactions/#{@transaction}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit transaction</.button>
+      <.button>Editar transação</.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Date"><%= @transaction.date %></:item>
-  <:item title="Product"><%= Warehouse.get_product!(@transaction.product_id).name %></:item>
-  <:item title="Amount"><%= @transaction.amount %></:item>
-  <:item title="Notes"><%= @transaction.notes %></:item>
+  <:item title="Data"><%= @transaction.date %></:item>
+  <:item title="Produto"><%= Warehouse.get_product!(@transaction.product_id).name %></:item>
+  <:item title="Quantidade"><%= @transaction.amount %></:item>
+  <:item title="Notas"><%= @transaction.notes %></:item>
 </.list>
 
-<.back navigate={~p"/transactions"}>Back to transactions</.back>
+<.back navigate={~p"/transactions"}>Voltar</.back>
 
 <.modal
   :if={@live_action == :edit}

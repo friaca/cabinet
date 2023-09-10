@@ -10,7 +10,6 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage transaction records in your database.</:subtitle>
       </.header>
 
       <.simple_form
@@ -23,15 +22,15 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
         <.input
           field={@form[:product_id]}
           type="select"
-          label="Product"
+          label="Produto"
           options={Transaction.get_products(@form)}
-          prompt="Choose a value"
+          prompt="Escolha um valor"
         />
-        <.input field={@form[:date]} type="date" label="Date" />
-        <.input field={@form[:amount]} type="number" label="Amount" step="any" />
-        <.input field={@form[:notes]} type="text" label="Notes" />
+        <.input field={@form[:date]} type="date" label="Data" />
+        <.input field={@form[:amount]} type="number" label="Quantidade" step="any" />
+        <.input field={@form[:notes]} type="text" label="Notas" />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Transaction</.button>
+          <.button phx-disable-with="Salvando...">Salvar transação</.button>
         </:actions>
       </.simple_form>
     </div>
@@ -69,7 +68,7 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Transaction updated successfully")
+         |> put_flash(:info, "Transação atualizada com sucesso!")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -84,7 +83,7 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Transaction created successfully")
+         |> put_flash(:info, "Transação criada com sucesso!")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
