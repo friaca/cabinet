@@ -1,22 +1,21 @@
 <.header>
-  Product <%= @product.id %>
-  <:subtitle>This is a product record from your database.</:subtitle>
+  <%= @product.name %>
   <:actions>
     <.link patch={~p"/products/#{@product}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit product</.button>
+      <.button>Editar produto</.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Name"><%= @product.name %></:item>
-  <:item title="Type"><%= @product.type %></:item>
-  <:item title="Weight"><%= @product.weight %></:item>
-  <:item title="Quantity"><%= @product.quantity %></:item>
-  <:item title="List by"><%= @product.list_by %></:item>
+  <:item title="Nome"><%= @product.name %></:item>
+  <:item title="Tipo"><%= Product.translate_enum(:type, @product.type) %></:item>
+  <:item title="Peso"><%= @product.weight %></:item>
+  <:item title="Quantidade"><%= @product.quantity %></:item>
+  <:item title="Listagem"><%= Product.translate_enum(:list_by, @product.list_by) %></:item>
 </.list>
 
-<.back navigate={~p"/products"}>Back to products</.back>
+<.back navigate={~p"/products"}>Voltar para Produtos</.back>
 
 <.modal :if={@live_action == :edit} id="product-modal" show on_cancel={JS.patch(~p"/products/#{@product}")}>
   <.live_component

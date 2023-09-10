@@ -2,6 +2,7 @@ defmodule CabinetWeb.ProductLive.Show do
   use CabinetWeb, :live_view
 
   alias Cabinet.Warehouse
+  alias Cabinet.Warehouse.Product
 
   @impl true
   def mount(_params, _session, socket) do
@@ -10,12 +11,12 @@ defmodule CabinetWeb.ProductLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    product = Warehouse.get_product!(id)
     {:noreply,
      socket
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:product, Warehouse.get_product!(id))}
+     |> assign(:page_title, page_title(socket.assigns.live_action, product))
+     |> assign(:product, product)}
   end
 
-  defp page_title(:show), do: "Show Product"
-  defp page_title(:edit), do: "Edit Product"
+  defp page_title(_action, product), do: product.name
 end
