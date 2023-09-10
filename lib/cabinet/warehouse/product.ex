@@ -82,4 +82,12 @@ defmodule Cabinet.Warehouse.Product do
       :type => %{:raw => "Material", :final => "Final"}
     }
   end
+
+  def redact(value, listing, product_listing) do
+    if product_listing == listing do
+      value
+    else
+      "—"
+    end
+  end
 end
