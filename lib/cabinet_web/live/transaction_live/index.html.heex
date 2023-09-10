@@ -12,7 +12,7 @@
   rows={@streams.transactions}
   row_click={fn {_id, transaction} -> JS.navigate(~p"/transactions/#{transaction}") end}
 >
-  <:col :let={{_id, transaction}} label="Data"><%= transaction.date %></:col>
+  <:col :let={{_id, transaction}} label="Data"><%= Helpers.format_date(transaction.date) %></:col>
   <:col :let={{_id, transaction}} label="Produto">
     <%= Warehouse.get_product!(transaction.product_id).name || "" %>
   </:col>
