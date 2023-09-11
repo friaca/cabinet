@@ -39,21 +39,21 @@ defmodule CabinetWeb.ProductLive.FormComponent do
           phx-change="change_listing"
         />
         <.input
+          :if={@selected_listing == :weight}
           field={@form[:weight]}
           type="number"
           label="Weight"
           step="any"
           class="hide"
           id="weight_input"
-          :if={@selected_listing == :weight}
         />
         <.input
+          :if={@selected_listing == :quantity}
           field={@form[:quantity]}
           type="number"
           label="Quantity"
           class="hide"
           id="quantity_input"
-          :if={@selected_listing == :quantity}
         />
         <:actions>
           <.button phx-disable-with="Salvando...">Save Product</.button>
@@ -87,9 +87,10 @@ defmodule CabinetWeb.ProductLive.FormComponent do
     save_product(socket, socket.assigns.action, product_params)
   end
 
-  def handle_event("change_listing", %{"product" => product_params}, socket) do
-    socket = socket
-      |> assign(:selected_listing, String.to_atom(product_params["list_by"]))
+  def handle_event("change_listing", %{"product" => %{"list_by" => listing}}, socket) do
+    socket =
+      socket
+      |> assign(:selected_listing, String.to_atom(listing))
 
     changeset =
       socket.assigns.product
