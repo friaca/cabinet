@@ -22,18 +22,18 @@ defmodule CabinetWeb.ProductLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
+        <.input field={@form[:name]} type="text" label="Nome" />
         <.input
           field={@form[:type]}
           type="select"
-          label="Type"
+          label="Tipo"
           prompt="Escolha um valor"
           options={Product.select_options(:type, @form)}
         />
         <.input
           field={@form[:list_by]}
           type="select"
-          label="List by"
+          label="Listagem"
           prompt="Escolha um valor"
           options={Product.select_options(:list_by, @form)}
           phx-change="change_listing"
@@ -42,7 +42,7 @@ defmodule CabinetWeb.ProductLive.FormComponent do
           :if={@selected_listing == :weight}
           field={@form[:weight]}
           type="number"
-          label="Weight"
+          label="Peso"
           step="any"
           class="hide"
           id="weight_input"
@@ -51,7 +51,7 @@ defmodule CabinetWeb.ProductLive.FormComponent do
           :if={@selected_listing == :quantity}
           field={@form[:quantity]}
           type="number"
-          label="Quantity"
+          label="Quantidade"
           class="hide"
           id="quantity_input"
         />
