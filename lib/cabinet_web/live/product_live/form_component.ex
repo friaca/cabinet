@@ -56,7 +56,7 @@ defmodule CabinetWeb.ProductLive.FormComponent do
           id="quantity_input"
         />
         <:actions>
-          <.button phx-disable-with="Salvando...">Save Product</.button>
+          <.button phx-disable-with="Salvando...">Salvar produto</.button>
         </:actions>
       </.simple_form>
     </div>
