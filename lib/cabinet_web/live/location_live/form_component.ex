@@ -9,7 +9,6 @@ defmodule CabinetWeb.LocationLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage location records in your database.</:subtitle>
       </.header>
 
       <.simple_form
@@ -19,9 +18,9 @@ defmodule CabinetWeb.LocationLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
+        <.input field={@form[:name]} type="text" label="Nome" />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Location</.button>
+          <.button phx-disable-with="Salvando...">Salvar localização</.button>
         </:actions>
       </.simple_form>
     </div>
@@ -59,7 +58,7 @@ defmodule CabinetWeb.LocationLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Location updated successfully")
+         |> put_flash(:info, "Localização atualizada com sucesso!")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -74,7 +73,7 @@ defmodule CabinetWeb.LocationLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Location created successfully")
+         |> put_flash(:info, "Localização criada com sucesso")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

@@ -16,19 +16,19 @@ defmodule CabinetWeb.LocationLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Location")
+    |> assign(:page_title, "Editar localização")
     |> assign(:location, Warehouse.get_location!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Location")
+    |> assign(:page_title, "Nova localização")
     |> assign(:location, %Location{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Locations")
+    |> assign(:page_title, "Localizações")
     |> assign(:location, nil)
   end
 

@@ -16,6 +16,6 @@ defmodule CabinetWeb.LocationLive.Show do
      |> assign(:location, Warehouse.get_location!(id))}
   end
 
-  defp page_title(:show), do: "Show Location"
-  defp page_title(:edit), do: "Edit Location"
+  defp page_title(:show), do: "Localização"
+  defp page_title(:edit), do: "Editar localização"
 end
