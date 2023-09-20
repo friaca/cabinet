@@ -37,4 +37,18 @@ defmodule Cabinet.WarehouseFixtures do
 
     transaction
   end
+
+  @doc """
+  Generate a location.
+  """
+  def location_fixture(attrs \\ %{}) do
+    {:ok, location} =
+      attrs
+      |> Enum.into(%{
+        name: "some name"
+      })
+      |> Cabinet.Warehouse.create_location()
+
+    location
+  end
 end
