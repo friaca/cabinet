@@ -333,4 +333,100 @@ defmodule Cabinet.Warehouse do
   def change_location(%Location{} = location, attrs \\ %{}) do
     Location.changeset(location, attrs)
   end
+
+  alias Cabinet.LocationProduct
+
+  @doc """
+  Returns the list of products in a location.
+
+  ## Examples
+
+      iex> list_location_products()
+      [%LocationProduct{}, ...]
+
+  """
+  def list_location_products() do
+    Repo.all(LocationProduct)
+  end
+
+  @doc """
+  Gets a single location product.
+
+  Raises `Ecto.NoResultsError` if the LocationProduct does not exist.
+
+  ## Examples
+
+      iex> get_location_product!(123)
+      %LocationProduct{}
+
+      iex> get_location_product!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_location_product!(id), do: Repo.get!(LocationProduct, id)
+
+  @doc """
+  Creates a product in a location.
+
+  ## Examples
+
+      iex> create_location_product(%{field: value})
+      {:ok, %LocationProduct{}}
+
+      iex> create_location_product(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_location_product(attrs \\ %{}) do
+    %LocationProduct{}
+    |> LocationProduct.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a product in a location.
+
+  ## Examples
+
+      iex> update_location_product(location_product, %{field: new_value})
+      {:ok, %LocationProduct{}}
+
+      iex> update_location_product(location_product, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_location_product(%LocationProduct{} = location_product, attrs) do
+    location_product
+    |> LocationProduct.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a product in a location.
+
+  ## Examples
+
+      iex> delete_location_product(location_product)
+      {:ok, %LocationProduct{}}
+
+      iex> delete_location_product(location_product)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_location_product(%LocationProduct{} = location_product) do
+    Repo.delete(location_product)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking a location product changes.
+
+  ## Examples
+
+      iex> change_location_product(location_product)
+      %Ecto.Changeset{data: %LocationProduct{}}
+
+  """
+  def change_location_product(%LocationProduct{} = location_product, attrs \\ %{}) do
+    LocationProduct.changeset(location_product, attrs)
+  end
 end

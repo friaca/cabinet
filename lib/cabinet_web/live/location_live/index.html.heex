@@ -7,7 +7,11 @@
   </:actions>
 </.header>
 
-<.table id="locations" rows={@streams.locations}>
+<.table
+  id="locations"
+  rows={@streams.locations}
+  row_click={fn {_id, location} -> JS.navigate(~p"/locations/#{location}") end}
+>
   <:col :let={{_id, location}} label="Nome"><%= location.name %></:col>
   <:action :let={{_id, location}}>
     <div class="sr-only">
