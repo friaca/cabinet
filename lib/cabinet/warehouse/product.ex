@@ -31,6 +31,21 @@ defmodule Cabinet.Warehouse.Product do
     end)
   end
 
+  def get_product_options(form) do
+    products = Cabinet.Warehouse.list_products()
+
+    Enum.reduce(products, [], fn product, acc ->
+      [
+        [
+          key: product.name,
+          value: product.id,
+          selected: Map.fetch!(form.data, :product_id) == product.id
+        ]
+        | acc
+      ]
+    end)
+  end
+
   @doc false
   def changeset(product, attrs) do
     product

@@ -20,21 +20,6 @@ defmodule Cabinet.Warehouse.Transaction do
     end
   end
 
-  def get_products(form) do
-    products = Cabinet.Warehouse.list_products()
-
-    Enum.reduce(products, [], fn product, acc ->
-      [
-        [
-          key: product.name,
-          value: product.id,
-          selected: Map.fetch!(form.data, :product_id) == product.id
-        ]
-        | acc
-      ]
-    end)
-  end
-
   @doc false
   def changeset(transaction, attrs) do
     transaction
