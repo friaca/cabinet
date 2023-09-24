@@ -337,7 +337,7 @@ defmodule Cabinet.Warehouse do
   alias Cabinet.LocationProduct
 
   @doc """
-  Returns the list of products in a location.
+  Returns all products related to locations.
 
   ## Examples
 
@@ -347,6 +347,20 @@ defmodule Cabinet.Warehouse do
   """
   def list_location_products() do
     Repo.all(LocationProduct)
+  end
+
+  @doc """
+  Returns the list of products in a location.
+
+  ## Examples
+
+      iex> list_location_products_by_location_id(location_id)
+      [%LocationProduct{}, ...]
+
+  """
+  def list_location_products_by_location_id(location_id) do
+    query = from lp in LocationProduct, where: lp.location_id == ^location_id
+    Repo.all(query)
   end
 
   @doc """
