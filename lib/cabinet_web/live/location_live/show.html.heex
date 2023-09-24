@@ -4,6 +4,9 @@
     <.link patch={~p"/locations/#{@location}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Editar</.button>
     </.link>
+    <.link patch={~p"/locations/#{@location}/show/add-product"} phx-click={JS.push_focus()}>
+      <.button>Adicionar produto</.button>
+    </.link>
   </:actions>
 </.header>
 
@@ -12,6 +15,23 @@
 </.list>
 
 <.back navigate={~p"/locations"}>Voltar</.back>
+
+<.modal
+  :if={@live_action == :add_product}
+  id="location-add-product-modal"
+  show
+  on_cancel={JS.patch(~p"/locations/#{@location}")}
+>
+  <.live_component
+    module={CabinetWeb.LocationProductLive.FormComponent}
+    id={@location.id}
+    title={@page_title}
+    action={@live_action}
+    location_product={@location_product}
+    location_id={@location.id}
+    patch={~p"/locations/#{@location}/show/add-product"}
+  />
+</.modal>
 
 <.modal
   :if={@live_action == :edit}

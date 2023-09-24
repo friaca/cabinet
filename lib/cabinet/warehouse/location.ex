@@ -16,4 +16,19 @@ defmodule Cabinet.Warehouse.Location do
     |> cast(attrs, [:name])
     |> validate_required([:name])
   end
+
+  def get_location_options(form) do
+    locations = Cabinet.Warehouse.list_locations()
+
+    Enum.reduce(locations, [], fn location, acc ->
+      [
+        [
+          key: location.name,
+          value: location.id,
+          selected: Map.fetch!(form.data, :location_id) == location.id
+        ]
+        | acc
+      ]
+    end)
+  end
 end
