@@ -17,7 +17,7 @@ defmodule Cabinet.LocationProduct do
   @doc false
   def changeset(location_product, attrs) do
     location_product
-    |> cast(attrs, [:initial_amount, :current_amount])
-    |> validate_required([:initial_amount, :current_amount])
+    |> cast(attrs, [:initial_amount, :current_amount, :location_id, :product_id])
+    |> validate_required([:initial_amount, :location_id, :product_id])
   end
 end
