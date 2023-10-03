@@ -17,7 +17,7 @@ defmodule Cabinet.Warehouse.Location do
     |> validate_required([:name])
   end
 
-  def get_location_options(form) do
+  def get_location_options(form) when is_map(form) do
     locations = Cabinet.Warehouse.list_locations()
 
     Enum.reduce(locations, [], fn location, acc ->
@@ -25,7 +25,22 @@ defmodule Cabinet.Warehouse.Location do
         [
           key: location.name,
           value: location.id,
-          selected: Map.fetch!(form.data, :location_id) == location.id
+          selected: Map.fetch!(form.data, :id) == location.id
+        ]
+        | acc
+      ]
+    end)
+  end
+
+  def get_location_options(location_id) when is_binary(location_id) do
+    locations = Cabinet.Warehouse.list_locations()
+
+    Enum.reduce(locations, [], fn location, acc ->
+      [
+        [
+          key: location.name,
+          value: location.id,
+          selected: location_id == location.id
         ]
         | acc
       ]

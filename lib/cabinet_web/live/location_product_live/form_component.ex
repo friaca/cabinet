@@ -22,12 +22,13 @@ defmodule CabinetWeb.LocationProductLive.FormComponent do
         phx-submit="save"
       >
         <.input
-          field={@location_product_form[:location_id] || @location_id}
+          field={@location_product_form[:location_id]}
           type="select"
           label="Localização"
-          options={Location.get_location_options(@location_product_form)}
+          options={Location.get_location_options(@id)}
           prompt="Escolha um valor"
-          disabled={@location_id}
+          disabled={@id}
+          class="bg-slate-200"
         />
         <.input
           field={@location_product_form[:product_id]}
@@ -42,13 +43,17 @@ defmodule CabinetWeb.LocationProductLive.FormComponent do
           label="Quantidade Inicial"
           step="any"
         />
-        <.input
-          field={@location_product_form[:current_amount]}
-          type="number"
-          label="Quantidade Atual"
-          step="any"
-          disabled
-        />
+        <%= unless @action == :new_product do %>
+          <.input
+            field={@location_product_form[:current_amount]}
+            type="number"
+            label="Quantidade Atual"
+            step="any"
+            disabled
+            class="bg-slate-200"
+          />
+        <% end %>
+        
         <:actions>
           <.button phx-disable-with="Salvando...">Salvar</.button>
         </:actions>
@@ -68,20 +73,31 @@ defmodule CabinetWeb.LocationProductLive.FormComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"location" => location_params}, socket) do
+  def handle_event("validate", %{"location_product" => location_product_params}, socket) do
+    params =
+      if socket.assigns.action == :new_product do
+        Map.put(location_product_params, "location_id", socket.assigns.id)
+      else
+        location_product_params
+      end
+
     changeset =
-      socket.assigns.location
-      |> Warehouse.change_location(location_params)
+      socket.assigns.location_product
+      |> Warehouse.change_location_product(params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign_form(socket, changeset)}
   end
 
   def handle_event("save", %{"location_product" => location_product_params}, socket) do
-    save_location_product(socket, socket.assigns.action, location_product_params)
+    if socket.assigns.id do
+      params = Map.put(location_product_params, "location_id", socket.assigns.id)
+      IO.inspect(params)
+      save_location_product(socket, socket.assigns.action, params)
+    end
   end
 
-  defp save_location_product(socket, :edit, location_product_params) do
+  defp save_location_product(socket, :edit_product, location_product_params) do
     case Warehouse.update_location_product(
            socket.assigns.location_product,
            location_product_params
@@ -99,7 +115,7 @@ defmodule CabinetWeb.LocationProductLive.FormComponent do
     end
   end
 
-  defp save_location_product(socket, :new, location_product_params) do
+  defp save_location_product(socket, :new_product, location_product_params) do
     case Warehouse.create_location_product(location_product_params) do
       {:ok, location_product} ->
         notify_parent({:saved, location_product})

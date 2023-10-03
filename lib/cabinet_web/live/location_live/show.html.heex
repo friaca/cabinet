@@ -17,7 +17,7 @@
 <.back navigate={~p"/locations"}>Voltar</.back>
 
 <.modal
-  :if={@live_action == :add_product}
+  :if={@live_action == :new_product}
   id="location-add-product-modal"
   show
   on_cancel={JS.patch(~p"/locations/#{@location}")}
@@ -26,10 +26,9 @@
     module={CabinetWeb.LocationProductLive.FormComponent}
     id={@location.id}
     title={@page_title}
-    action={@live_action}
+    action={:new_product}
     location_product={@location_product}
-    location_id={@location.id}
-    patch={~p"/locations/#{@location}/show/add-product"}
+    patch={~p"/locations/#{@location}"}
   />
 </.modal>
 

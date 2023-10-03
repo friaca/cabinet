@@ -359,8 +359,7 @@ defmodule Cabinet.Warehouse do
 
   """
   def list_location_products_by_location_id(location_id) do
-    query = from lp in LocationProduct, where: lp.location_id == ^location_id
-    Repo.all(query)
+    Repo.get_by!(LocationProduct, location_id: location_id)
   end
 
   @doc """
