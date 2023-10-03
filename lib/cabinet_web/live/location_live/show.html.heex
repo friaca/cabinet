@@ -10,9 +10,15 @@
   </:actions>
 </.header>
 
-<.list>
-  <:item title="Nome"><%= @location.name %></:item>
-</.list>
+<.table id="location-products" rows={@streams.location_products} row_click={}>
+  <:col :let={{_id, location_product}} label="Produto"><%= location_product.product.name %></:col>
+  <:col :let={{_id, location_product}} label="Quantidade Inicial">
+    <%= location_product.initial_amount %>
+  </:col>
+  <:col :let={{_id, location_product}} label="Quantidade Atual">
+    <%= location_product.current_amount %>
+  </:col>
+</.table>
 
 <.back navigate={~p"/locations"}>Voltar</.back>
 

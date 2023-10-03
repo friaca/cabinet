@@ -6,8 +6,12 @@ defmodule CabinetWeb.LocationLive.Show do
 
   @impl true
   def mount(params, _session, socket) do
-    IO.inspect(params)
-    {:ok, socket}
+    {:ok,
+     stream(
+       socket,
+       :location_products,
+       Warehouse.list_location_products_by_location_id(Map.get(params, "id"))
+     )}
   end
 
   @impl true
