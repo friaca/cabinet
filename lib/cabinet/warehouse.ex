@@ -359,7 +359,13 @@ defmodule Cabinet.Warehouse do
 
   """
   def list_location_products_by_location_id(location_id) do
-    Repo.get_by!(LocationProduct, location_id: location_id)
+    Repo.all(
+      from lp in LocationProduct,
+        join: p in assoc(lp, :product),
+        where: lp.location_id == ^location_id,
+        preload: [product: p]
+    )
+    |> IO.inspect()
   end
 
   @doc """
