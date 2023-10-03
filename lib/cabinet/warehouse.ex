@@ -362,8 +362,9 @@ defmodule Cabinet.Warehouse do
     Repo.all(
       from lp in LocationProduct,
         join: p in assoc(lp, :product),
+        join: l in assoc(lp, :location),
         where: lp.location_id == ^location_id,
-        preload: [product: p]
+        preload: [product: p, location: l]
     )
     |> IO.inspect()
   end
