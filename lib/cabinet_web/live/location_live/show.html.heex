@@ -1,0 +1,55 @@
+<.header>
+  <%= @location.name %>
+  <:actions>
+    <.link patch={~p"/locations/#{@location}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Editar</.button>
+    </.link>
+    <.link patch={~p"/locations/#{@location}/show/add-product"} phx-click={JS.push_focus()}>
+      <.button>Adicionar produto</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="location-products" rows={@streams.location_products} row_click={}>
+  <:col :let={{_id, location_product}} label="Produto"><%= location_product.product.name %></:col>
+  <:col :let={{_id, location_product}} label="Quantidade Inicial">
+    <%= location_product.initial_amount %>
+  </:col>
+  <:col :let={{_id, location_product}} label="Quantidade Atual">
+    <%= location_product.current_amount %>
+  </:col>
+</.table>
+
+<.back navigate={~p"/locations"}>Voltar</.back>
+
+<.modal
+  :if={@live_action == :new_product}
+  id="location-add-product-modal"
+  show
+  on_cancel={JS.patch(~p"/locations/#{@location}")}
+>
+  <.live_component
+    module={CabinetWeb.LocationProductLive.FormComponent}
+    id={@location.id}
+    title={@page_title}
+    action={:new_product}
+    location_product={@location_product}
+    patch={~p"/locations/#{@location}"}
+  />
+</.modal>
+
+<.modal
+  :if={@live_action == :edit}
+  id="location-modal"
+  show
+  on_cancel={JS.patch(~p"/locations/#{@location}")}
+>
+  <.live_component
+    module={CabinetWeb.LocationLive.FormComponent}
+    id={@location.id}
+    title={@page_title}
+    action={@live_action}
+    location={@location}
+    patch={~p"/locations/#{@location}"}
+  />
+</.modal>

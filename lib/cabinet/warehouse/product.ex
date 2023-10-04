@@ -1,6 +1,7 @@
 defmodule Cabinet.Warehouse.Product do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Cabinet.Warehouse.Product
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -14,27 +15,35 @@ defmodule Cabinet.Warehouse.Product do
     timestamps()
   end
 
-  defp enum_mappings(key) do
-    %{
-      :list_by => %{:weight => "Peso (Kg/L)", :quantity => "Quantidade"},
-      :type => %{:raw => "Material", :final => "Final"}
-    }[key]
-  end
-
-  defp label_mappings(key) do
-    %{
-      :weight => "Peso (Kg/L)",
-      :quantity => "Quantidade"
-    }[key]
-  end
-
   def translate_enum(field, value) do
-    enum_mappings(field)[value]
+    enum_mappings()[field][value]
   end
 
-  def select_options(field, product) do
-    Enum.map(enum_mappings(field), fn {atom, translation} ->
-      [key: to_string(translation), value: atom, selected: Map.fetch!(product, field) == translation]
+  def select_options(field, form) do
+    Enum.reduce(enum_mappings()[field], [], fn {enum, translation}, acc ->
+      [
+        [
+          key: to_string(translation),
+          value: enum,
+          selected: Map.fetch!(form.data, field) == translation
+        ]
+        | acc
+      ]
+    end)
+  end
+
+  def get_product_options(form) do
+    products = Cabinet.Warehouse.list_products()
+
+    Enum.reduce(products, [], fn product, acc ->
+      [
+        [
+          key: product.name,
+          value: product.id,
+          selected: Map.fetch!(form.data, :product_id) == product.id
+        ]
+        | acc
+      ]
     end)
   end
 
@@ -55,25 +64,11 @@ defmodule Cabinet.Warehouse.Product do
     product
     |> cast(attrs, [:name, :type, :weight, :quantity, :list_by])
     |> validate_required([:name, :type, :list_by], message: "Não pode ficar em branco.")
-    |> validate_by_listing()
+    |> validate_listing()
   end
-
-  defp validate_by_listing(changeset) do
-    case get_field(changeset, :list_by) do
-      :weight ->
-        changeset |> validate_required(:weight, message: "Não pode ficar em branco.")
-
-      :quantity ->
-        changeset |> validate_required(:quantity, message: "Não pode ficar em branco.")
-
-      _ -> changeset
-    end
-  end
-
-  defp cast_to_integer?(product), do: Map.get(product, :list_by) == :quantity
 
   def cast_listing(product, value) when is_binary(value) do
-    { decimal, _ } = Decimal.parse(value)
+    {decimal, _} = Decimal.parse(value)
     cast_listing(product, decimal)
   end
 
@@ -85,18 +80,48 @@ defmodule Cabinet.Warehouse.Product do
     end
   end
 
+  def get_changeset_by_transaction(transaction_amount, product_id)
+      when transaction_amount != "" and product_id != "" do
+    product = Cabinet.Warehouse.get_product!(product_id)
+    {field, difference} = get_product_difference(transaction_amount, product)
+
+    product
+    |> Ecto.Changeset.cast(%{field => difference}, [field])
+  end
+
+  def get_changeset_by_transaction(_transaction_amount, _product_id) do
+    %Product{}
+    |> Product.changeset(%{})
+  end
+
+  defp cast_to_integer?(product), do: Map.get(product, :list_by) == :quantity
+
+  defp validate_listing(changeset) do
+    case get_field(changeset, :list_by) do
+      nil -> changeset
+      field -> changeset |> validate_required(field, message: "Não pode ficar em branco.")
+    end
+  end
+
   defp get_product_difference(transaction_amount, product) do
     list_by = Map.get(product, :list_by)
     transaction_amount_cast = product |> cast_listing(transaction_amount)
 
-    { list_by, Map.get(product, list_by) + transaction_amount_cast }
+    {list_by, Map.get(product, list_by) + transaction_amount_cast}
   end
 
-  def get_changeset_by_transaction(transaction_amount, product_id) do
-    product = Cabinet.Warehouse.get_product!(product_id)
-    { field, difference } = get_product_difference(transaction_amount, product)
+  defp enum_mappings do
+    %{
+      :list_by => %{:weight => "Peso", :quantity => "Quantidade"},
+      :type => %{:raw => "Material", :final => "Final"}
+    }
+  end
 
-    product
-    |> Ecto.Changeset.cast(%{field => difference}, [field])
+  def redact(value, listing, product_listing) do
+    if product_listing == listing do
+      value
+    else
+      "—"
+    end
   end
 end

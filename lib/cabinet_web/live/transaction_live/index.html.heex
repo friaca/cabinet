@@ -1,0 +1,54 @@
+<.header>
+  Transações
+  <:actions>
+    <.link patch={~p"/transactions/new"}>
+      <.button>Nova transação</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="transactions"
+  rows={@streams.transactions}
+  row_click={fn {_id, transaction} -> JS.navigate(~p"/transactions/#{transaction}") end}
+>
+  <:col :let={{_id, transaction}} label="Data"><%= Helpers.format_date(transaction.date) %></:col>
+  <:col :let={{_id, transaction}} label="Produto">
+    <%= Warehouse.get_product!(transaction.product_id).name || "" %>
+  </:col>
+  <:col :let={{_id, transaction}} label="Localização">
+    <%= Warehouse.get_location!(transaction.location_id).name || "" %>
+  </:col>
+  <:col :let={{_id, transaction}} label="Quantidade"><%= transaction.amount %></:col>
+  <:col :let={{_id, transaction}} label="Notas"><%= transaction.notes %></:col>
+  <:action :let={{_id, transaction}}>
+    <div class="sr-only">
+      <.link navigate={~p"/transactions/#{transaction}"}>Ver</.link>
+    </div>
+    <.link patch={~p"/transactions/#{transaction}/edit"}>Editar</.link>
+  </:action>
+  <:action :let={{id, transaction}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: transaction.id}) |> hide("##{id}")}
+      data-confirm="Você tem certeza?"
+    >
+      Deletar
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="transaction-modal"
+  show
+  on_cancel={JS.patch(~p"/transactions")}
+>
+  <.live_component
+    module={CabinetWeb.TransactionLive.FormComponent}
+    id={@transaction.id || :new}
+    title={@page_title}
+    action={@live_action}
+    transaction={@transaction}
+    patch={~p"/transactions"}
+  />
+</.modal>

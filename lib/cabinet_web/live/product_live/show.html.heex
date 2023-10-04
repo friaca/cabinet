@@ -1,0 +1,36 @@
+<.header>
+  <%= @product.name %>
+  <:actions>
+    <.link patch={~p"/products/#{@product}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Editar produto</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Nome"><%= @product.name %></:item>
+  <:item title="Tipo"><%= Product.translate_enum(:type, @product.type) %></:item>
+  <:item title="Listagem"><%= Product.translate_enum(:list_by, @product.list_by) %></:item>
+  <:item title="Peso"><%= Product.redact(@product.weight, :weight, @product.list_by) %></:item>
+  <:item title="Quantidade">
+    <%= Product.redact(@product.quantity, :quantity, @product.list_by) %>
+  </:item>
+</.list>
+
+<.back navigate={~p"/products"}>Voltar para Produtos</.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="product-modal"
+  show
+  on_cancel={JS.patch(~p"/products/#{@product}")}
+>
+  <.live_component
+    module={CabinetWeb.ProductLive.FormComponent}
+    id={@product.id}
+    title={@page_title}
+    action={@live_action}
+    product={@product}
+    patch={~p"/products/#{@product}"}
+  />
+</.modal>

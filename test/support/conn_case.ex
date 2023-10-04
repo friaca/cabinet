@@ -19,15 +19,15 @@ defmodule CabinetWeb.ConnCase do
 
   using do
     quote do
+      # The default endpoint for testing
+      @endpoint CabinetWeb.Endpoint
+
+      use CabinetWeb, :verified_routes
+
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
       import CabinetWeb.ConnCase
-
-      alias CabinetWeb.Router.Helpers, as: Routes
-
-      # The default endpoint for testing
-      @endpoint CabinetWeb.Endpoint
     end
   end
 

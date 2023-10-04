@@ -1,0 +1,58 @@
+<.header>
+  Produtos
+  <:actions>
+    <.link patch={~p"/products/new"}>
+      <.button>Novo Produto</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="products"
+  rows={@streams.products}
+  row_click={fn {_id, product} -> JS.navigate(~p"/products/#{product}") end}
+>
+  <:col :let={{_id, product}} label="Nome"><%= product.name %></:col>
+  <:col :let={{_id, product}} label="Tipo">
+    <%= Product.translate_enum(:type, product.type) %>
+  </:col>
+  <:col :let={{_id, product}} label="Listagem">
+    <%= Product.translate_enum(:list_by, product.list_by) %>
+  </:col>
+  <:col :let={{_id, product}} label="Peso">
+    <%= Product.redact(product.weight, :weight, product.list_by) %>
+  </:col>
+  <:col :let={{_id, product}} label="Quantidade">
+    <%= Product.redact(product.quantity, :quantity, product.list_by) %>
+  </:col>
+  <:action :let={{_id, product}}>
+    <div class="sr-only">
+      <.link navigate={~p"/products/#{product}"}>Ver</.link>
+    </div>
+    <.link patch={~p"/products/#{product}/edit"}>Editar</.link>
+  </:action>
+  <:action :let={{id, product}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: product.id}) |> hide("##{id}")}
+      data-confirm="Você tem certeza?"
+    >
+      Deletar
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="product-modal"
+  show
+  on_cancel={JS.patch(~p"/products")}
+>
+  <.live_component
+    module={CabinetWeb.ProductLive.FormComponent}
+    id={@product.id || :new}
+    title={@page_title}
+    action={@live_action}
+    product={@product}
+    patch={~p"/products"}
+  />
+</.modal>

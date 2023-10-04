@@ -8,12 +8,14 @@ defmodule Cabinet.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
-      Cabinet.Repo,
       # Start the Telemetry supervisor
       CabinetWeb.Telemetry,
+      # Start the Ecto repository
+      Cabinet.Repo,
       # Start the PubSub system
       {Phoenix.PubSub, name: Cabinet.PubSub},
+      # Start Finch
+      {Finch, name: Cabinet.Finch},
       # Start the Endpoint (http/https)
       CabinetWeb.Endpoint
       # Start a worker by calling: Cabinet.Worker.start_link(arg)

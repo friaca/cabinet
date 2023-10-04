@@ -30,11 +30,25 @@ defmodule Cabinet.WarehouseFixtures do
       attrs
       |> Enum.into(%{
         amount: "120.5",
-        date: ~D[2023-01-26],
+        date: ~D[2023-09-09],
         notes: "some notes"
       })
       |> Cabinet.Warehouse.create_transaction()
 
     transaction
+  end
+
+  @doc """
+  Generate a location.
+  """
+  def location_fixture(attrs \\ %{}) do
+    {:ok, location} =
+      attrs
+      |> Enum.into(%{
+        name: "some name"
+      })
+      |> Cabinet.Warehouse.create_location()
+
+    location
   end
 end

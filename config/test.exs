@@ -10,7 +10,7 @@ config :pbkdf2_elixir, :rounds, 1
 # Run `mix help test` for more information.
 config :cabinet, Cabinet.Repo,
   username: "postgres",
-  password: "kazuya",
+  password: "postgres",
   hostname: "localhost",
   database: "cabinet_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
@@ -20,14 +20,17 @@ config :cabinet, Cabinet.Repo,
 # you can enable the server option below.
 config :cabinet, CabinetWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "0zMTQS3jmyAoWTpwr4FvMsBvi7DHN6GWvCiHYtcv9zbmXMp9g1sz91NWqwmlbIWc",
+  secret_key_base: "1R5LQGRMkwQ+RmJvfLd8NjpcsNamu0POga3TMU1sMcT/JIvZ/N6+7xHUplemWgZJ",
   server: false
 
 # In test we don't send emails.
 config :cabinet, Cabinet.Mailer, adapter: Swoosh.Adapters.Test
 
+# Disable swoosh api client as it is only required for production adapters.
+config :swoosh, :api_client, false
+
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
