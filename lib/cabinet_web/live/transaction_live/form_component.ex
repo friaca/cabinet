@@ -2,7 +2,7 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
   use CabinetWeb, :live_component
 
   alias Cabinet.Warehouse
-  alias Cabinet.Warehouse.Product
+  alias Cabinet.Warehouse.{Product, Location}
 
   @impl true
   def render(assigns) do
@@ -24,6 +24,13 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
           type="select"
           label="Produto"
           options={Product.get_product_options(@form)}
+          prompt="Escolha um valor"
+        />
+        <.input
+          field={@form[:location_id]}
+          type="select"
+          label="Localização"
+          options={Location.get_location_options(@form)}
           prompt="Escolha um valor"
         />
         <.input field={@form[:date]} type="date" label="Data" />

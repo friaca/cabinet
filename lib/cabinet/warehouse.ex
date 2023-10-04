@@ -159,6 +159,7 @@ defmodule Cabinet.Warehouse do
     |> Repo.transaction()
     |> case do
       {:ok, %{transaction: transaction, product: _product}} -> {:ok, transaction}
+      {:error, :transaction, changeset, _} -> {:error, changeset}
       {:error, error} -> Repo.rollback(error)
     end
   end

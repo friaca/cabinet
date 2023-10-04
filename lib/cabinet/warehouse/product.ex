@@ -1,6 +1,7 @@
 defmodule Cabinet.Warehouse.Product do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Cabinet.Warehouse.Product
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -67,12 +68,18 @@ defmodule Cabinet.Warehouse.Product do
     end
   end
 
-  def get_changeset_by_transaction(transaction_amount, product_id) do
+  def get_changeset_by_transaction(transaction_amount, product_id)
+      when transaction_amount != "" and product_id != "" do
     product = Cabinet.Warehouse.get_product!(product_id)
     {field, difference} = get_product_difference(transaction_amount, product)
 
     product
     |> Ecto.Changeset.cast(%{field => difference}, [field])
+  end
+
+  def get_changeset_by_transaction(_transaction_amount, _product_id) do
+    %Product{}
+    |> Product.changeset(%{})
   end
 
   defp cast_to_integer?(product), do: Map.get(product, :list_by) == :quantity

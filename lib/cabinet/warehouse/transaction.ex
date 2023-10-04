@@ -9,6 +9,7 @@ defmodule Cabinet.Warehouse.Transaction do
     field :date, :date
     field :notes, :string
     field :product_id, :binary_id
+    field :location_id, :binary_id
 
     timestamps()
   end
@@ -23,8 +24,10 @@ defmodule Cabinet.Warehouse.Transaction do
   @doc false
   def changeset(transaction, attrs) do
     transaction
-    |> cast(attrs, [:date, :amount, :notes, :product_id])
-    |> validate_required([:date, :amount, :product_id], message: "Não pode ficar em branco.")
+    |> cast(attrs, [:date, :amount, :notes, :product_id, :location_id])
+    |> validate_required([:date, :amount, :product_id, :location_id],
+      message: "Não pode ficar em branco."
+    )
     |> validate_amount(attrs)
   end
 
