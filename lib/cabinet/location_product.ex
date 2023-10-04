@@ -20,6 +20,25 @@ defmodule Cabinet.Warehouse.LocationProduct do
     location_product
     |> cast(attrs, [:initial_amount, :current_amount, :location_id, :product_id])
     |> validate_required([:initial_amount, :location_id, :product_id])
+    |> validate_unique_product()
+  end
+
+  # TODO: Refactor this function, I tried with
+  def validate_unique_product(changeset) do
+    product_id = get_field(changeset, :product_id)
+    location_id = get_field(changeset, :location_id)
+    IO.inspect(changeset)
+
+    case product_id do
+      nil ->
+        changeset
+
+      id ->
+        case Warehouse.product_exists_in_location?(location_id, id) do
+          true -> add_error(changeset, :product_id, "Produto já existe na localização")
+          false -> changeset
+        end
+    end
   end
 
   def get_location_products_options(form, location_id) do

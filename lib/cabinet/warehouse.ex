@@ -409,6 +409,30 @@ defmodule Cabinet.Warehouse do
   def get_location_product!(id), do: Repo.get!(LocationProduct, id)
 
   @doc """
+  Checks if product already exists in a location.
+  
+  ## Examples
+  
+      iex> product_exists_in_location?("fff-817...", "f43-827...")
+      true
+  
+      iex> product_exists_in_location?("faa-817...", "f41-827...")
+      false
+  
+  """
+  def product_exists_in_location?(_location_id, nil), do: false
+
+  def product_exists_in_location?(location_id, product_id),
+    do:
+      Repo.exists?(
+        from lp in LocationProduct,
+          where: lp.product_id == ^product_id,
+          where: lp.location_id == ^location_id
+      )
+
+  # do: Repo.exists?(LocationProduct, where: [product_id: product_id, location_id: location_id])
+
+  @doc """
   Creates a product in a location.
   
   ## Examples
