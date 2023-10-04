@@ -121,7 +121,7 @@ defmodule CabinetWeb.LocationProductLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Produto associado com sucesso")
+         |> put_flash(:info, "Produto associado com sucesso!")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
