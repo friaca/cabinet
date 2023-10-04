@@ -448,6 +448,9 @@ defmodule Cabinet.Warehouse do
     %LocationProduct{}
     |> LocationProduct.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, lp} -> {:ok, Repo.preload(lp, [:product, :location])}
+    end
   end
 
   @doc """
@@ -466,6 +469,9 @@ defmodule Cabinet.Warehouse do
     location_product
     |> LocationProduct.changeset(attrs)
     |> Repo.update()
+    |> case do
+      {:ok, lp} -> {:ok, Repo.preload(lp, [:product, :location])}
+    end
   end
 
   @doc """

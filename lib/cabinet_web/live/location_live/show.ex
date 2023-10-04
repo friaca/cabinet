@@ -47,6 +47,14 @@ defmodule CabinetWeb.LocationLive.Show do
     |> assign(:location_product, Warehouse.get_location_product!(id))
   end
 
+  @impl true
+  def handle_info(
+        {CabinetWeb.LocationProductLive.FormComponent, {:saved, location_product}},
+        socket
+      ) do
+    {:noreply, stream_insert(socket, :location_products, location_product)}
+  end
+
   defp page_title(:show), do: "Localização"
   defp page_title(:edit), do: "Editar localização"
   defp page_title(:new_product), do: "Adicionar produto"
