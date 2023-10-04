@@ -21,4 +21,20 @@ defmodule Cabinet.Warehouse.LocationProduct do
     |> cast(attrs, [:initial_amount, :current_amount, :location_id, :product_id])
     |> validate_required([:initial_amount, :location_id, :product_id])
   end
+
+  def get_location_products_options(form, location_id) do
+    location_products =
+      Warehouse.list_location_products_by_location_id(location_id)
+
+    Enum.reduce(location_products, [], fn lp, acc ->
+      [
+        [
+          key: lp.product.name,
+          value: lp.product.id,
+          selected: Map.fetch!(form.data, :product_id) == lp.product.id
+        ]
+        | acc
+      ]
+    end)
+  end
 end

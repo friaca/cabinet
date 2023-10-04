@@ -2,10 +2,14 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
   use CabinetWeb, :live_component
 
   alias Cabinet.Warehouse
-  alias Cabinet.Warehouse.{Product, Location}
+  alias Cabinet.Warehouse.{Location, LocationProduct}
 
   @impl true
   def render(assigns) do
+    assigns =
+      assigns
+      |> assign_new(:product_options, fn -> [] end)
+
     ~H"""
     <div>
       <.header>
@@ -25,13 +29,13 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
           label="Localização"
           options={Location.get_location_options(@form)}
           prompt="Escolha um valor"
-          phx-change={}
+          phx-change="set_product_list"
         />
         <.input
           field={@form[:product_id]}
           type="select"
           label="Produto"
-          options={Product.get_product_options(@form)}
+          options={@product_options}
           prompt="Escolha um valor"
         />
         <.input field={@form[:date]} type="date" label="Data" />
@@ -67,6 +71,17 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
 
   def handle_event("save", %{"transaction" => transaction_params}, socket) do
     save_transaction(socket, socket.assigns.action, transaction_params)
+  end
+
+  def handle_event(
+        "set_product_list",
+        %{"transaction" => %{"location_id" => location_id}},
+        socket
+      ) do
+    product_options =
+      LocationProduct.get_location_products_options(socket.assigns.form, location_id)
+
+    {:noreply, assign(socket, :product_options, product_options)}
   end
 
   defp save_transaction(socket, :edit, transaction_params) do
