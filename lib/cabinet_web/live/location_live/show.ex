@@ -2,7 +2,7 @@ defmodule CabinetWeb.LocationLive.Show do
   use CabinetWeb, :live_view
 
   alias Cabinet.Warehouse
-  alias Cabinet.LocationProduct
+  alias Cabinet.Warehouse.LocationProduct
 
   @impl true
   def mount(params, _session, socket) do

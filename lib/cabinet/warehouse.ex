@@ -358,7 +358,7 @@ defmodule Cabinet.Warehouse do
     Location.changeset(location, attrs)
   end
 
-  alias Cabinet.LocationProduct
+  alias Cabinet.Warehouse.LocationProduct
 
   @doc """
   Returns all products related to locations.

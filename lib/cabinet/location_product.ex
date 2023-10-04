@@ -1,4 +1,5 @@
-defmodule Cabinet.LocationProduct do
+defmodule Cabinet.Warehouse.LocationProduct do
+  alias Cabinet.Warehouse
   alias Cabinet.Warehouse.{Product, Location}
   use Ecto.Schema
   import Ecto.Changeset
