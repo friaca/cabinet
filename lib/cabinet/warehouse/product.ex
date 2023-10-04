@@ -54,11 +54,6 @@ defmodule Cabinet.Warehouse.Product do
     Map.get(product, list_by)
   end
 
-  def get_listing_label(product) do
-    Map.get(product, :list_by)
-    |> label_mappings()
-  end
-
   @doc false
   def changeset(product, attrs) do
     product

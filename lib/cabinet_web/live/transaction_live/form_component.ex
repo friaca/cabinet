@@ -20,17 +20,18 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
         phx-submit="save"
       >
         <.input
-          field={@form[:product_id]}
-          type="select"
-          label="Produto"
-          options={Product.get_product_options(@form)}
-          prompt="Escolha um valor"
-        />
-        <.input
           field={@form[:location_id]}
           type="select"
           label="Localização"
           options={Location.get_location_options(@form)}
+          prompt="Escolha um valor"
+          phx-change={}
+        />
+        <.input
+          field={@form[:product_id]}
+          type="select"
+          label="Produto"
+          options={Product.get_product_options(@form)}
           prompt="Escolha um valor"
         />
         <.input field={@form[:date]} type="date" label="Data" />

@@ -6,8 +6,6 @@ defmodule CabinetWeb.LocationProductLive.FormComponent do
 
   @impl true
   def render(assigns) do
-    IO.inspect(assigns)
-
     ~H"""
     <div>
       <.header>
@@ -92,7 +90,6 @@ defmodule CabinetWeb.LocationProductLive.FormComponent do
   def handle_event("save", %{"location_product" => location_product_params}, socket) do
     if socket.assigns.id do
       params = Map.put(location_product_params, "location_id", socket.assigns.id)
-      IO.inspect(params)
       save_location_product(socket, socket.assigns.action, params)
     end
   end

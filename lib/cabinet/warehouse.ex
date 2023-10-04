@@ -10,12 +10,12 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Returns the list of products.
-
+  
   ## Examples
-
+  
       iex> list_products()
       [%Product{}, ...]
-
+  
   """
   def list_products do
     Repo.all(Product)
@@ -23,31 +23,31 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Gets a single product.
-
+  
   Raises `Ecto.NoResultsError` if the Product does not exist.
-
+  
   ## Examples
-
+  
       iex> get_product!(123)
       %Product{}
-
+  
       iex> get_product!(456)
       ** (Ecto.NoResultsError)
-
+  
   """
   def get_product!(id), do: Repo.get!(Product, id)
 
   @doc """
   Creates a product.
-
+  
   ## Examples
-
+  
       iex> create_product(%{field: value})
       {:ok, %Product{}}
-
+  
       iex> create_product(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
-
+  
   """
   def create_product(attrs \\ %{}) do
     %Product{}
@@ -57,15 +57,15 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Updates a product.
-
+  
   ## Examples
-
+  
       iex> update_product(product, %{field: new_value})
       {:ok, %Product{}}
-
+  
       iex> update_product(product, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
-
+  
   """
   def update_product(%Product{} = product, attrs) do
     product
@@ -75,18 +75,19 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Deletes a product.
-
+  
   ## Examples
-
+  
       iex> delete_product(product)
       {:ok, %Product{}}
-
+  
       iex> delete_product(product)
       {:error, %Ecto.Changeset{}}
-
+  
   """
   def delete_product(%Product{} = product) do
-    transactions_query = from t in Cabinet.Warehouse.Transaction, where: t.product_id == ^product.id
+    transactions_query =
+      from t in Cabinet.Warehouse.Transaction, where: t.product_id == ^product.id
 
     Ecto.Multi.new()
     |> Ecto.Multi.delete_all(:transactions, transactions_query)
@@ -100,12 +101,12 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking product changes.
-
+  
   ## Examples
-
+  
       iex> change_product(product)
       %Ecto.Changeset{data: %Product{}}
-
+  
   """
   def change_product(%Product{} = product, attrs \\ %{}) do
     Product.changeset(product, attrs)
@@ -115,12 +116,12 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Returns the list of transactions.
-
+  
   ## Examples
-
+  
       iex> list_transactions()
       [%Transaction{}, ...]
-
+  
   """
   def list_transactions do
     Repo.all(Transaction)
@@ -128,26 +129,25 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Gets a single transaction.
-
+  
   Raises `Ecto.NoResultsError` if the Transaction does not exist.
-
+  
   ## Examples
-
+  
       iex> get_transaction!(123)
       %Transaction{}
-
+  
       iex> get_transaction!(456)
       ** (Ecto.NoResultsError)
-
+  
   """
   def get_transaction!(id), do: Repo.get!(Transaction, id)
 
-
   @doc """
   Gets all transactions of a product
-
+  
   ## Examples
-
+  
     iex> get_transactions_by_product_id("0000-000-000-0000")
     [%Transaction{}]
   """
@@ -158,15 +158,15 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Creates a transaction.
-
+  
   ## Examples
-
+  
       iex> create_transaction(%{field: value})
       {:ok, %Transaction{}}
-
+  
       iex> create_transaction(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
-
+  
   """
   def create_transaction(attrs \\ %{}) do
     transaction_changeset =
@@ -189,15 +189,15 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Updates a transaction.
-
+  
   ## Examples
-
+  
       iex> update_transaction(transaction, %{field: new_value})
       {:ok, %Transaction{}}
-
+  
       iex> update_transaction(transaction, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
-
+  
   """
   def update_transaction(%Transaction{} = transaction, attrs) do
     transaction_changeset =
@@ -222,15 +222,15 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Deletes a transaction.
-
+  
   ## Examples
-
+  
       iex> delete_transaction(transaction)
       {:ok, %Transaction{}}
-
+  
       iex> delete_transaction(transaction)
       {:error, %Ecto.Changeset{}}
-
+  
   """
   def delete_transaction(%Transaction{} = transaction) do
     amount = Map.get(transaction, :amount) |> Decimal.mult(-1)
@@ -251,12 +251,12 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking transaction changes.
-
+  
   ## Examples
-
+  
       iex> change_transaction(transaction)
       %Ecto.Changeset{data: %Transaction{}}
-
+  
   """
   def change_transaction(%Transaction{} = transaction, attrs \\ %{}) do
     Transaction.changeset(transaction, attrs)
@@ -266,12 +266,12 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Returns the list of locations.
-
+  
   ## Examples
-
+  
       iex> list_locations()
       [%Location{}, ...]
-
+  
   """
   def list_locations do
     Repo.all(Location)
@@ -279,31 +279,31 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Gets a single location.
-
+  
   Raises `Ecto.NoResultsError` if the Location does not exist.
-
+  
   ## Examples
-
+  
       iex> get_location!(123)
       %Location{}
-
+  
       iex> get_location!(456)
       ** (Ecto.NoResultsError)
-
+  
   """
   def get_location!(id), do: Repo.get!(Location, id)
 
   @doc """
   Creates a location.
-
+  
   ## Examples
-
+  
       iex> create_location(%{field: value})
       {:ok, %Location{}}
-
+  
       iex> create_location(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
-
+  
   """
   def create_location(attrs \\ %{}) do
     %Location{}
@@ -313,15 +313,15 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Updates a location.
-
+  
   ## Examples
-
+  
       iex> update_location(location, %{field: new_value})
       {:ok, %Location{}}
-
+  
       iex> update_location(location, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
-
+  
   """
   def update_location(%Location{} = location, attrs) do
     location
@@ -331,15 +331,15 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Deletes a location.
-
+  
   ## Examples
-
+  
       iex> delete_location(location)
       {:ok, %Location{}}
-
+  
       iex> delete_location(location)
       {:error, %Ecto.Changeset{}}
-
+  
   """
   def delete_location(%Location{} = location) do
     Repo.delete(location)
@@ -347,12 +347,12 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking location changes.
-
+  
   ## Examples
-
+  
       iex> change_location(location)
       %Ecto.Changeset{data: %Location{}}
-
+  
   """
   def change_location(%Location{} = location, attrs \\ %{}) do
     Location.changeset(location, attrs)
@@ -362,12 +362,12 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Returns all products related to locations.
-
+  
   ## Examples
-
+  
       iex> list_location_products()
       [%LocationProduct{}, ...]
-
+  
   """
   def list_location_products() do
     Repo.all(LocationProduct)
@@ -375,12 +375,12 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Returns the list of products in a location.
-
+  
   ## Examples
-
+  
       iex> list_location_products_by_location_id(location_id)
       [%LocationProduct{}, ...]
-
+  
   """
   def list_location_products_by_location_id(location_id) do
     Repo.all(
@@ -390,36 +390,35 @@ defmodule Cabinet.Warehouse do
         where: lp.location_id == ^location_id,
         preload: [product: p, location: l]
     )
-    |> IO.inspect()
   end
 
   @doc """
   Gets a single location product.
-
+  
   Raises `Ecto.NoResultsError` if the LocationProduct does not exist.
-
+  
   ## Examples
-
+  
       iex> get_location_product!(123)
       %LocationProduct{}
-
+  
       iex> get_location_product!(456)
       ** (Ecto.NoResultsError)
-
+  
   """
   def get_location_product!(id), do: Repo.get!(LocationProduct, id)
 
   @doc """
   Creates a product in a location.
-
+  
   ## Examples
-
+  
       iex> create_location_product(%{field: value})
       {:ok, %LocationProduct{}}
-
+  
       iex> create_location_product(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
-
+  
   """
   def create_location_product(attrs \\ %{}) do
     %LocationProduct{}
@@ -429,15 +428,15 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Updates a product in a location.
-
+  
   ## Examples
-
+  
       iex> update_location_product(location_product, %{field: new_value})
       {:ok, %LocationProduct{}}
-
+  
       iex> update_location_product(location_product, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
-
+  
   """
   def update_location_product(%LocationProduct{} = location_product, attrs) do
     location_product
@@ -447,15 +446,15 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Deletes a product in a location.
-
+  
   ## Examples
-
+  
       iex> delete_location_product(location_product)
       {:ok, %LocationProduct{}}
-
+  
       iex> delete_location_product(location_product)
       {:error, %Ecto.Changeset{}}
-
+  
   """
   def delete_location_product(%LocationProduct{} = location_product) do
     Repo.delete(location_product)
@@ -463,12 +462,12 @@ defmodule Cabinet.Warehouse do
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking a location product changes.
-
+  
   ## Examples
-
+  
       iex> change_location_product(location_product)
       %Ecto.Changeset{data: %LocationProduct{}}
-
+  
   """
   def change_location_product(%LocationProduct{} = location_product, attrs \\ %{}) do
     LocationProduct.changeset(location_product, attrs)
