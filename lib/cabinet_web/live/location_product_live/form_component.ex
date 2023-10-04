@@ -88,10 +88,7 @@ defmodule CabinetWeb.LocationProductLive.FormComponent do
   end
 
   def handle_event("save", %{"location_product" => location_product_params}, socket) do
-    if socket.assigns.id do
-      params = Map.put(location_product_params, "location_id", socket.assigns.id)
-      save_location_product(socket, socket.assigns.action, params)
-    end
+    save_location_product(socket, socket.assigns.action, location_product_params)
   end
 
   defp save_location_product(socket, :edit_product, location_product_params) do
@@ -113,7 +110,12 @@ defmodule CabinetWeb.LocationProductLive.FormComponent do
   end
 
   defp save_location_product(socket, :new_product, location_product_params) do
-    case Warehouse.create_location_product(location_product_params) do
+    params =
+      location_product_params
+      |> Map.put("location_id", socket.assigns.id)
+      |> Map.put("current_amount", Map.get(location_product_params, "initial_amount"))
+
+    case Warehouse.create_location_product(params) do
       {:ok, location_product} ->
         notify_parent({:saved, location_product})
 

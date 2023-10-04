@@ -19,7 +19,7 @@ defmodule Cabinet.Warehouse.LocationProduct do
   def changeset(location_product, attrs) do
     location_product
     |> cast(attrs, [:initial_amount, :current_amount, :location_id, :product_id])
-    |> validate_required([:initial_amount, :location_id, :product_id])
+    |> validate_required([:initial_amount, :current_amount, :location_id, :product_id])
     |> validate_unique_product()
   end
 
@@ -27,7 +27,6 @@ defmodule Cabinet.Warehouse.LocationProduct do
   def validate_unique_product(changeset) do
     product_id = get_field(changeset, :product_id)
     location_id = get_field(changeset, :location_id)
-    IO.inspect(changeset)
 
     case product_id do
       nil ->
