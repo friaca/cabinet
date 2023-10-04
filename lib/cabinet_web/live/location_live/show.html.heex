@@ -4,21 +4,31 @@
     <.link patch={~p"/locations/#{@location}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Editar</.button>
     </.link>
+    
     <.link patch={~p"/locations/#{@location}/show/add-product"} phx-click={JS.push_focus()}>
       <.button>Adicionar produto</.button>
     </.link>
   </:actions>
 </.header>
 
-<.table id="location-products" rows={@streams.location_products} row_click={}>
-  <:col :let={{_id, location_product}} label="Produto"><%= location_product.product.name %></:col>
-  <:col :let={{_id, location_product}} label="Quantidade Inicial">
-    <%= location_product.initial_amount %>
-  </:col>
-  <:col :let={{_id, location_product}} label="Quantidade Atual">
-    <%= location_product.current_amount %>
-  </:col>
-</.table>
+<%= if length(@streams.location_products.inserts) > 0 do %>
+  <.table id="location-products" rows={@streams.location_products} row_click={}>
+    <:col :let={{_id, location_product}} label="Produto">
+      <%= location_product.product.name %>
+    </:col>
+    
+    <:col :let={{_id, location_product}} label="Quantidade Inicial">
+      <%= location_product.initial_amount %>
+    </:col>
+    
+    <:col :let={{_id, location_product}} label="Quantidade Atual">
+      <%= location_product.current_amount %>
+    </:col>
+  </.table>
+<% else %>
+  <%= # TODO: Make this prettier %>
+  <h1>Nenhum produto aqui!</h1>
+<% end %>
 
 <.back navigate={~p"/locations"}>Voltar</.back>
 
