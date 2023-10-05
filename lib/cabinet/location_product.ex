@@ -1,6 +1,6 @@
 defmodule Cabinet.Warehouse.LocationProduct do
   alias Cabinet.Warehouse
-  alias Cabinet.Warehouse.{Product, Location}
+  alias Cabinet.Warehouse.{Product, Location, LocationProduct}
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -23,7 +23,7 @@ defmodule Cabinet.Warehouse.LocationProduct do
     |> validate_unique_product()
   end
 
-  # TODO: Refactor this function, I tried with
+  # TODO: Refactor this function, I tried with pattern matching but couldn't do
   def validate_unique_product(changeset) do
     product_id = get_field(changeset, :product_id)
     location_id = get_field(changeset, :location_id)
@@ -55,4 +55,48 @@ defmodule Cabinet.Warehouse.LocationProduct do
       ]
     end)
   end
+
+  def get_changeset_by_transaction(transaction_amount, location_id, product_id)
+      when transaction_amount != "" and location_id != "" and product_id != "" do
+    location_product = Warehouse.get_location_product!(location_id, product_id)
+    difference = get_product_difference(transaction_amount, location_product)
+
+    location_product
+    |> Ecto.Changeset.cast(%{current_amount: difference}, [:current_amount])
+  end
+
+  def get_changeset_by_transaction(_transaction_amount, _location_id, _product_id) do
+    %LocationProduct{}
+    |> LocationProduct.changeset(%{})
+  end
+
+  defp get_product_difference(transaction_amount, location_product) do
+    transaction_amount_cast = cast_amount(location_product.product, transaction_amount)
+
+    current_amount =
+      cast_amount(location_product.product, Map.get(location_product, :current_amount))
+
+    current_amount + transaction_amount_cast
+  end
+
+  @doc """
+  Casts a value to a Decimal or Integer depending on the product type.
+  
+  Weight: Decimal
+  Quantity: Integer
+  """
+  def cast_amount(product, value) when is_binary(value) do
+    {parsed, _} = Decimal.parse(value)
+    cast_amount(product, parsed)
+  end
+
+  def cast_amount(product, value) do
+    if cast_to_integer?(product) do
+      Decimal.to_integer(value)
+    else
+      value
+    end
+  end
+
+  defp cast_to_integer?(product), do: Map.get(product, :list_by) == :quantity
 end

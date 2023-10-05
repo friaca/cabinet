@@ -5,8 +5,7 @@ defmodule Cabinet.Warehouse do
 
   import Ecto.Query, warn: false
   alias Cabinet.Repo
-
-  alias Cabinet.Warehouse.Product
+  alias Cabinet.Warehouse.{Product, LocationProduct}
 
   @doc """
   Returns the list of products.
@@ -173,15 +172,22 @@ defmodule Cabinet.Warehouse do
       %Transaction{}
       |> Transaction.changeset(attrs)
 
-    product_changeset =
-      Product.get_changeset_by_transaction(Map.get(attrs, "amount"), Map.get(attrs, "product_id"))
+    # product_changeset =
+    #   Product.get_changeset_by_transaction(Map.get(attrs, "amount"), Map.get(attrs, "product_id"))
+
+    location_product_changeset =
+      LocationProduct.get_changeset_by_transaction(
+        Map.get(attrs, "amount"),
+        Map.get(attrs, "location_id"),
+        Map.get(attrs, "product_id")
+      )
 
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:transaction, transaction_changeset)
-    |> Ecto.Multi.update(:product, product_changeset)
+    |> Ecto.Multi.update(:location_product, location_product_changeset)
     |> Repo.transaction()
     |> case do
-      {:ok, %{transaction: transaction, product: _product}} -> {:ok, transaction}
+      {:ok, %{transaction: transaction, location_product: _product}} -> {:ok, transaction}
       {:error, :transaction, changeset, _} -> {:error, changeset}
       {:error, error} -> Repo.rollback(error)
     end
@@ -207,16 +213,23 @@ defmodule Cabinet.Warehouse do
     amount_difference =
       Transaction.get_amount_difference(Map.get(transaction, :amount), Map.get(attrs, "amount"))
 
-    product_changeset =
-      Product.get_changeset_by_transaction(amount_difference, Map.get(attrs, "product_id"))
+    location_product_changeset =
+      LocationProduct.get_changeset_by_transaction(
+        amount_difference,
+        Map.get(attrs, "location_id"),
+        Map.get(attrs, "product_id")
+      )
 
     Ecto.Multi.new()
     |> Ecto.Multi.update(:transaction, transaction_changeset)
-    |> Ecto.Multi.update(:product, product_changeset)
+    |> Ecto.Multi.update(:location_product, location_product_changeset)
     |> Repo.transaction()
     |> case do
-      {:ok, %{transaction: transaction, product: _product}} -> {:ok, transaction}
-      {:error, error} -> Repo.rollback(error)
+      {:ok, %{transaction: transaction, location_product: _location_product}} ->
+        {:ok, transaction}
+
+      {:error, error} ->
+        Repo.rollback(error)
     end
   end
 
@@ -235,17 +248,23 @@ defmodule Cabinet.Warehouse do
   def delete_transaction(%Transaction{} = transaction) do
     amount = Map.get(transaction, :amount) |> Decimal.mult(-1)
 
-    product_changeset =
-      amount
-      |> Product.get_changeset_by_transaction(Map.get(transaction, :product_id))
+    location_product_changeset =
+      LocationProduct.get_changeset_by_transaction(
+        amount,
+        Map.get(transaction, :location_id),
+        Map.get(transaction, :product_id)
+      )
 
     Ecto.Multi.new()
-    |> Ecto.Multi.update(:product, product_changeset)
+    |> Ecto.Multi.update(:location_product, location_product_changeset)
     |> Ecto.Multi.delete(:transaction, transaction)
     |> Repo.transaction()
     |> case do
-      {:ok, %{transaction: transaction, product: _product}} -> {:ok, transaction}
-      {:error, error} -> Repo.rollback(error)
+      {:ok, %{transaction: transaction, location_product: _location_product}} ->
+        {:ok, transaction}
+
+      {:error, error} ->
+        Repo.rollback(error)
     end
   end
 
@@ -358,8 +377,6 @@ defmodule Cabinet.Warehouse do
     Location.changeset(location, attrs)
   end
 
-  alias Cabinet.Warehouse.LocationProduct
-
   @doc """
   Returns all products related to locations.
   
@@ -407,6 +424,31 @@ defmodule Cabinet.Warehouse do
   
   """
   def get_location_product!(id), do: Repo.get!(LocationProduct, id)
+
+  @doc """
+  Gets a single location product.
+  
+  Raises `Ecto.NoResultsError` if the LocationProduct does not exist.
+  
+  ## Examples
+  
+      iex> get_location_product!(123, 456)
+      %LocationProduct{}
+  
+      iex> get_location_product!(456, 789)
+      ** (Ecto.NoResultsError)
+  
+  """
+  def get_location_product!(location_id, product_id) do
+    Repo.one!(
+      from lp in LocationProduct,
+        join: p in assoc(lp, :product),
+        join: l in assoc(lp, :location),
+        where: lp.location_id == ^location_id,
+        where: lp.product_id == ^product_id,
+        preload: [product: p, location: l]
+    )
+  end
 
   @doc """
   Checks if product already exists in a location.

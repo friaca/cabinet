@@ -8,7 +8,13 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
   def render(assigns) do
     assigns =
       assigns
-      |> assign_new(:product_options, fn -> [] end)
+      |> assign_new(:product_options, fn ->
+        if assigns.action == :edit do
+          get_product_options(assigns.form, assigns.form.data.location_id)
+        else
+          []
+        end
+      end)
 
     ~H"""
     <div>
@@ -78,9 +84,7 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
         %{"transaction" => %{"location_id" => location_id}},
         socket
       ) do
-    product_options =
-      LocationProduct.get_location_products_options(socket.assigns.form, location_id)
-
+    product_options = get_product_options(socket.assigns.form, location_id)
     {:noreply, assign(socket, :product_options, product_options)}
   end
 
@@ -112,6 +116,10 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
     end
+  end
+
+  defp get_product_options(form, location_id) do
+    LocationProduct.get_location_products_options(form, location_id)
   end
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
