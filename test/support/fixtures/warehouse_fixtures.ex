@@ -13,9 +13,7 @@ defmodule Cabinet.WarehouseFixtures do
       |> Enum.into(%{
         list_by: :weight,
         name: "some name",
-        quantity: 42,
-        type: :raw,
-        weight: "120.5"
+        type: :raw
       })
       |> Cabinet.Warehouse.create_product()
 

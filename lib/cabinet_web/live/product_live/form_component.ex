@@ -14,7 +14,7 @@ defmodule CabinetWeb.ProductLive.FormComponent do
       <.header>
         <%= @title %>
       </.header>
-
+      
       <.simple_form
         for={@form}
         id="product-form"
@@ -36,24 +36,6 @@ defmodule CabinetWeb.ProductLive.FormComponent do
           label="Listagem"
           prompt="Escolha um valor"
           options={Product.select_options(:list_by, @form)}
-          phx-change="change_listing"
-        />
-        <.input
-          :if={@selected_listing == :weight}
-          field={@form[:weight]}
-          type="number"
-          label="Peso"
-          step="any"
-          class="hide"
-          id="weight_input"
-        />
-        <.input
-          :if={@selected_listing == :quantity}
-          field={@form[:quantity]}
-          type="number"
-          label="Quantidade"
-          class="hide"
-          id="quantity_input"
         />
         <:actions>
           <.button phx-disable-with="Salvando...">Salvar produto</.button>
@@ -85,18 +67,6 @@ defmodule CabinetWeb.ProductLive.FormComponent do
 
   def handle_event("save", %{"product" => product_params}, socket) do
     save_product(socket, socket.assigns.action, product_params)
-  end
-
-  def handle_event("change_listing", %{"product" => %{"list_by" => listing}}, socket) do
-    socket =
-      socket
-      |> assign(:selected_listing, String.to_atom(listing))
-
-    changeset =
-      socket.assigns.product
-      |> Warehouse.change_product(socket.assigns.form.params)
-
-    {:noreply, assign_form(socket, changeset)}
   end
 
   defp save_product(socket, :edit, product_params) do

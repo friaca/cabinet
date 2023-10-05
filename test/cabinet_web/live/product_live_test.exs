@@ -4,9 +4,9 @@ defmodule CabinetWeb.ProductLiveTest do
   import Phoenix.LiveViewTest
   import Cabinet.WarehouseFixtures
 
-  @create_attrs %{list_by: :weight, name: "some name", quantity: 42, type: :raw, weight: "120.5"}
-  @update_attrs %{list_by: :quantity, name: "some updated name", quantity: 43, type: :final, weight: "456.7"}
-  @invalid_attrs %{list_by: nil, name: nil, quantity: nil, type: nil, weight: nil}
+  @create_attrs %{list_by: :weight, name: "some name", , type: :raw}
+  @update_attrs %{list_by: :quantity, name: "some updated name", , type: :final}
+  @invalid_attrs %{list_by: nil, name: nil, type: nil}
 
   defp create_product(_) do
     product = product_fixture()

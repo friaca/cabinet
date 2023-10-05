@@ -5,11 +5,9 @@ defmodule Cabinet.Warehouse.Product do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "products" do
-    field :list_by, Ecto.Enum, values: [:weight, :quantity]
     field :name, :string
-    field :quantity, :integer
+    field :list_by, Ecto.Enum, values: [:weight, :quantity]
     field :type, Ecto.Enum, values: [:raw, :final]
-    field :weight, :decimal
 
     timestamps()
   end
@@ -50,16 +48,8 @@ defmodule Cabinet.Warehouse.Product do
   @doc false
   def changeset(product, attrs) do
     product
-    |> cast(attrs, [:name, :type, :weight, :quantity, :list_by])
+    |> cast(attrs, [:name, :type, :list_by])
     |> validate_required([:name, :type, :list_by], message: "Não pode ficar em branco.")
-    |> validate_listing()
-  end
-
-  defp validate_listing(changeset) do
-    case get_field(changeset, :list_by) do
-      nil -> changeset
-      field -> validate_required(changeset, field, message: "Não pode ficar em branco.")
-    end
   end
 
   defp enum_mappings do

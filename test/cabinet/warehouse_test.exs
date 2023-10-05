@@ -8,7 +8,7 @@ defmodule Cabinet.WarehouseTest do
 
     import Cabinet.WarehouseFixtures
 
-    @invalid_attrs %{list_by: nil, name: nil, quantity: nil, type: nil, weight: nil}
+    @invalid_attrs %{list_by: nil, name: nil, type: nil}
 
     test "list_products/0 returns all products" do
       product = product_fixture()
@@ -21,14 +21,12 @@ defmodule Cabinet.WarehouseTest do
     end
 
     test "create_product/1 with valid data creates a product" do
-      valid_attrs = %{list_by: :weight, name: "some name", quantity: 42, type: :raw, weight: "120.5"}
+      valid_attrs = %{list_by: :weight, name: "some name", type: :raw}
 
       assert {:ok, %Product{} = product} = Warehouse.create_product(valid_attrs)
       assert product.list_by == :weight
       assert product.name == "some name"
-      assert product.quantity == 42
       assert product.type == :raw
-      assert product.weight == Decimal.new("120.5")
     end
 
     test "create_product/1 with invalid data returns error changeset" do
@@ -37,14 +35,12 @@ defmodule Cabinet.WarehouseTest do
 
     test "update_product/2 with valid data updates the product" do
       product = product_fixture()
-      update_attrs = %{list_by: :quantity, name: "some updated name", quantity: 43, type: :final, weight: "456.7"}
+      update_attrs = %{list_by: :quantity, name: "some updated name", type: :final}
 
       assert {:ok, %Product{} = product} = Warehouse.update_product(product, update_attrs)
       assert product.list_by == :quantity
       assert product.name == "some updated name"
-      assert product.quantity == 43
       assert product.type == :final
-      assert product.weight == Decimal.new("456.7")
     end
 
     test "update_product/2 with invalid data returns error changeset" do
@@ -99,7 +95,9 @@ defmodule Cabinet.WarehouseTest do
       transaction = transaction_fixture()
       update_attrs = %{amount: "456.7", date: ~D[2023-09-10], notes: "some updated notes"}
 
-      assert {:ok, %Transaction{} = transaction} = Warehouse.update_transaction(transaction, update_attrs)
+      assert {:ok, %Transaction{} = transaction} =
+               Warehouse.update_transaction(transaction, update_attrs)
+
       assert transaction.amount == Decimal.new("456.7")
       assert transaction.date == ~D[2023-09-10]
       assert transaction.notes == "some updated notes"
@@ -107,7 +105,10 @@ defmodule Cabinet.WarehouseTest do
 
     test "update_transaction/2 with invalid data returns error changeset" do
       transaction = transaction_fixture()
-      assert {:error, %Ecto.Changeset{}} = Warehouse.update_transaction(transaction, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Warehouse.update_transaction(transaction, @invalid_attrs)
+
       assert transaction == Warehouse.get_transaction!(transaction.id)
     end
 
