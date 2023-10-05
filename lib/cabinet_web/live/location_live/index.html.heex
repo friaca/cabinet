@@ -13,12 +13,14 @@
   row_click={fn {_id, location} -> JS.navigate(~p"/locations/#{location}") end}
 >
   <:col :let={{_id, location}} label="Nome"><%= location.name %></:col>
+  
   <:action :let={{_id, location}}>
     <div class="sr-only">
       <.link navigate={~p"/locations/#{location}"}>Ver</.link>
     </div>
-    <.link patch={~p"/locations/#{location}/edit"}>Editar</.link>
+     <.link patch={~p"/locations/#{location}/edit"}>Editar</.link>
   </:action>
+  
   <:action :let={{id, location}}>
     <.link
       phx-click={JS.push("delete", value: %{id: location.id}) |> hide("##{id}")}

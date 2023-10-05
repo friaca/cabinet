@@ -40,6 +40,7 @@ defmodule CabinetWeb.LocationProductLive.FormComponent do
           type="number"
           label="Quantidade Inicial"
           step="any"
+          warnings={initial_amount_warnings(@action)}
         />
         <%= unless @action == :new_product do %>
           <.input
@@ -134,4 +135,12 @@ defmodule CabinetWeb.LocationProductLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp initial_amount_warnings(action) do
+    if action == :edit_product do
+      ["Mudar a Quantidade Inicial fará a Quantidade Atual ser recalculada"]
+    else
+      []
+    end
+  end
 end

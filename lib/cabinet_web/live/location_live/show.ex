@@ -40,11 +40,11 @@ defmodule CabinetWeb.LocationLive.Show do
     |> assign(:location_product, %LocationProduct{})
   end
 
-  defp apply_action(socket, :edit_product, %{"id" => id}) do
+  defp apply_action(socket, :edit_product, %{"id" => id, "product_id" => product_id}) do
     socket
     |> assign(:location, Warehouse.get_location!(id))
     |> assign(:page_title, page_title(socket.assigns.live_action))
-    |> assign(:location_product, Warehouse.get_location_product!(id))
+    |> assign(:location_product, Warehouse.get_location_product!(id, product_id))
   end
 
   @impl true
@@ -58,4 +58,5 @@ defmodule CabinetWeb.LocationLive.Show do
   defp page_title(:show), do: "Localização"
   defp page_title(:edit), do: "Editar localização"
   defp page_title(:new_product), do: "Adicionar produto"
+  defp page_title(:edit_product), do: "Editar produto"
 end

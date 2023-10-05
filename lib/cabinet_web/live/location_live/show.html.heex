@@ -5,14 +5,22 @@
       <.button>Editar</.button>
     </.link>
     
-    <.link patch={~p"/locations/#{@location}/show/add-product"} phx-click={JS.push_focus()}>
+    <.link patch={~p"/locations/#{@location}/add-product"} phx-click={JS.push_focus()}>
       <.button>Adicionar produto</.button>
     </.link>
   </:actions>
 </.header>
 
 <%= if length(@streams.location_products.inserts) > 0 do %>
-  <.table id="location-products" rows={@streams.location_products} row_click={}>
+  <.table
+    id="location-products"
+    rows={@streams.location_products}
+    row_click={
+      fn {_id, location_product} ->
+        JS.patch(~p"/locations/#{@location}/edit-product/#{location_product.product_id}")
+      end
+    }
+  >
     <:col :let={{_id, location_product}} label="Produto">
       <%= location_product.product.name %>
     </:col>
@@ -42,7 +50,23 @@
     module={CabinetWeb.LocationProductLive.FormComponent}
     id={@location.id}
     title={@page_title}
-    action={:new_product}
+    action={@live_action}
+    location_product={@location_product}
+    patch={~p"/locations/#{@location}"}
+  />
+</.modal>
+
+<.modal
+  :if={@live_action == :edit_product}
+  id="location-edit-product-modal"
+  show
+  on_cancel={JS.patch(~p"/locations/#{@location}")}
+>
+  <.live_component
+    module={CabinetWeb.LocationProductLive.FormComponent}
+    id={@location.id}
+    title={@page_title}
+    action={@live_action}
     location_product={@location_product}
     patch={~p"/locations/#{@location}"}
   />

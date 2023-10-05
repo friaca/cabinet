@@ -20,11 +20,11 @@ defmodule Cabinet.Warehouse.LocationProduct do
     location_product
     |> cast(attrs, [:initial_amount, :current_amount, :location_id, :product_id])
     |> validate_required([:initial_amount, :current_amount, :location_id, :product_id])
-    |> validate_unique_product()
+    |> maybe_validate_unique_product(location_product.id)
   end
 
   # TODO: Refactor this function, I tried with pattern matching but couldn't do
-  def validate_unique_product(changeset) do
+  def maybe_validate_unique_product(changeset, nil) do
     product_id = get_field(changeset, :product_id)
     location_id = get_field(changeset, :location_id)
 
@@ -39,6 +39,8 @@ defmodule Cabinet.Warehouse.LocationProduct do
         end
     end
   end
+
+  def maybe_validate_unique_product(changeset, _id), do: changeset
 
   def get_location_products_options(form, location_id) do
     location_products =

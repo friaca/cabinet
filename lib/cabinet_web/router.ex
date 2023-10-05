@@ -38,8 +38,8 @@ defmodule CabinetWeb.Router do
     live "/locations/:id/edit", LocationLive.Index, :edit
     live "/locations/:id", LocationLive.Show, :show
     live "/locations/:id/show/edit", LocationLive.Show, :edit
-    live "/locations/:id/show", LocationLive.Show, :new_product
-    live "/locations/:id/show/add-product", LocationLive.Show, :new_product
+    live "/locations/:id/add-product", LocationLive.Show, :new_product
+    live "/locations/:id/edit-product/:product_id", LocationLive.Show, :edit_product
   end
 
   # Other scopes may use custom stacks.
