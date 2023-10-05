@@ -46,7 +46,10 @@ defmodule Cabinet.Warehouse.Transaction do
           if is_valid_integer(value) do
             []
           else
-            [{field, "Couldn't cast `amount` to an integer"}]
+            [
+              {field,
+               "Esse produto é listado por \"Quantidade\", e por isso só aceita números inteiros"}
+            ]
           end
 
         :weight ->

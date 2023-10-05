@@ -76,7 +76,7 @@ defmodule Cabinet.Warehouse.LocationProduct do
     current_amount =
       cast_amount(location_product.product, Map.get(location_product, :current_amount))
 
-    current_amount + transaction_amount_cast
+    add_amounts(current_amount, transaction_amount_cast)
   end
 
   @doc """
@@ -99,4 +99,12 @@ defmodule Cabinet.Warehouse.LocationProduct do
   end
 
   defp cast_to_integer?(product), do: Map.get(product, :list_by) == :quantity
+
+  def add_amounts(%Decimal{} = amount1, %Decimal{} = amount2) do
+    Decimal.add(amount1, amount2)
+  end
+
+  def add_amounts(amount1, amount2) do
+    amount1 + amount2
+  end
 end
