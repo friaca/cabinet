@@ -2,7 +2,7 @@
 
 A dead simple inventory manager.
 
-This README and code is in English but the UI itself is in Portuguese for now. In the future I'll apply i18n but in the meantime it'll continue in Portuguese.
+This README and the code is in English but the UI itself is in Portuguese for now. In the future I'll apply i18n but in the meantime it'll continue in Portuguese.
 
 Most of the functionality is working, but I'm still adjusting and adding a few things. 
 
