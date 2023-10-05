@@ -277,6 +277,7 @@ defmodule CabinetWeb.CoreComponents do
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
 
   attr :errors, :list, default: []
+  attr :warnings, :list, default: []
   attr :checked, :boolean, doc: "the checked flag for checkbox inputs"
   attr :prompt, :string, default: nil, doc: "the prompt for select inputs"
   attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
@@ -394,6 +395,8 @@ defmodule CabinetWeb.CoreComponents do
         {@rest}
       />
       <.error :for={msg <- @errors}><%= msg %></.error>
+      
+      <.warning :for={msg <- @warnings}><%= msg %></.warning>
     </div>
     """
   end
@@ -421,6 +424,21 @@ defmodule CabinetWeb.CoreComponents do
     ~H"""
     <p class="mt-3 flex gap-3 text-sm leading-6 text-rose-600 phx-no-feedback:hidden">
       <.icon name="hero-exclamation-circle-mini" class="mt-0.5 h-5 w-5 flex-none" /> <%= render_slot(
+        @inner_block
+      ) %>
+    </p>
+    """
+  end
+
+  @doc """
+  Generates a generic warning message.
+  """
+  slot :inner_block, required: true
+
+  def warning(assigns) do
+    ~H"""
+    <p class="mt-3 flex gap-3 text-sm leading-6 text-yellow-600 phx-no-feedback:hidden">
+      <.icon name="hero-exclamation-triangle" class="mt-0.5 h-5 w-5 flex-none" /> <%= render_slot(
         @inner_block
       ) %>
     </p>
