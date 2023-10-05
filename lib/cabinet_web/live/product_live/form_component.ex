@@ -36,6 +36,8 @@ defmodule CabinetWeb.ProductLive.FormComponent do
           label="Listagem"
           prompt="Escolha um valor"
           options={Product.select_options(:list_by, @form)}
+          disabled={disabled?(@action)}
+          class={disabled?(@action) && "bg-slate-200"}
         />
         <:actions>
           <.button phx-disable-with="Salvando...">Salvar produto</.button>
@@ -104,4 +106,6 @@ defmodule CabinetWeb.ProductLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp disabled?(action), do: action == :edit
 end
