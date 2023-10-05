@@ -1,18 +1,21 @@
 # Cabinet
 
-To start your Phoenix server:
+A dead simple inventory manager.
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+This README and code is in English but the UI itself is in Portuguese for now. In the future I'll apply i18n but in the meantime it'll continue in Portuguese.
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Most of the functionality is working, but I'm still adjusting and adding a few things. 
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+Right now it supports products, locations, transactions and associating said products with said locations. 
 
-## Learn more
+## Running
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+The same as usual with most Elixir codebases:
+
+```mix setup```
+```mix phx.server```
+
+## Contributing
+
+Feel free to open issues or contribute to the code. The code may not be the most idiomatic, I'm still kinda new to Elixir, this is my first big boy project in it.
+
