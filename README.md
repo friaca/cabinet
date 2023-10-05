@@ -13,6 +13,7 @@ Right now it supports products, locations, transactions and associating said pro
 The same as usual with most Elixir codebases:
 
 ```mix setup```
+
 ```mix phx.server```
 
 ## Contributing
