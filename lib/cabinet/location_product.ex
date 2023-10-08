@@ -21,21 +21,56 @@ defmodule Cabinet.Warehouse.LocationProduct do
     |> cast(attrs, [:initial_amount, :current_amount, :location_id, :product_id])
     |> validate_required([:initial_amount, :current_amount, :location_id, :product_id])
     |> maybe_validate_unique_product(location_product.id)
+    |> validate_amount(location_product, attrs)
+    |> validate_number(:initial_amount, greater_than: 0, less_than: 9999)
+  end
+
+  def validate_amount(changeset, _location_product, attrs)
+      when map_size(attrs) == 0,
+      do: changeset
+
+  def validate_amount(changeset, %{id: nil} = _location_product, %{
+        "product_id" => product_id,
+        "initial_amount" => initial_amount
+      }) do
+    product = Warehouse.get_product!(product_id)
+    validate_amount(changeset, product, initial_amount)
+  end
+
+  def validate_amount(changeset, %{id: _id, product: product}, %{
+        "initial_amount" => initial_amount
+      }),
+      do: validate_amount(changeset, product, initial_amount)
+
+  def validate_amount(changeset, %Product{} = _product, ""),
+    do: changeset
+
+  def validate_amount(changeset, %{list_by: :weight}, _amount), do: changeset
+
+  def validate_amount(changeset, %{list_by: :quantity}, amount) do
+    validate_change(changeset, :initial_amount, fn :initial_amount, _value ->
+      case Integer.parse(amount) do
+        {_value, ""} -> []
+        _ -> [initial_amount: "Precisa ser um número inteiro"]
+      end
+    end)
   end
 
   # TODO: Refactor this function, I tried with pattern matching but couldn't do
   def maybe_validate_unique_product(changeset, nil) do
-    product_id = get_field(changeset, :product_id)
-    location_id = get_field(changeset, :location_id)
-
-    case product_id do
+    case get_field(changeset, :product_id) do
       nil ->
         changeset
 
       id ->
+        location_id = get_field(changeset, :location_id)
+
         case Warehouse.product_exists_in_location?(location_id, id) do
-          true -> add_error(changeset, :product_id, "Produto já existe na localização")
-          false -> changeset
+          true ->
+            add_error(changeset, :product_id, "Produto já existe na localização")
+
+          false ->
+            changeset
         end
     end
   end

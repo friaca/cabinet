@@ -107,5 +107,7 @@ defmodule CabinetWeb.ProductLive.FormComponent do
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 
+  # Prevent user from changing from Quantity to Weight and vice-versa after
+  # the product is already created
   defp disabled?(action), do: action == :edit
 end

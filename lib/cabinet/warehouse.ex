@@ -423,7 +423,8 @@ defmodule Cabinet.Warehouse do
       ** (Ecto.NoResultsError)
   
   """
-  def get_location_product!(id), do: Repo.get!(LocationProduct, id)
+  def get_location_product!(id),
+    do: Repo.get!(LocationProduct, id) |> Repo.preload([:product, :location])
 
   @doc """
   Gets a single location product.
@@ -492,6 +493,7 @@ defmodule Cabinet.Warehouse do
     |> Repo.insert()
     |> case do
       {:ok, lp} -> {:ok, Repo.preload(lp, [:product, :location])}
+      {:error, changeset} -> {:error, changeset}
     end
   end
 
@@ -513,6 +515,7 @@ defmodule Cabinet.Warehouse do
     |> Repo.update()
     |> case do
       {:ok, lp} -> {:ok, Repo.preload(lp, [:product, :location])}
+      {:error, changeset} -> {:error, changeset}
     end
   end
 
