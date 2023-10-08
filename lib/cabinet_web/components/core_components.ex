@@ -493,6 +493,7 @@ defmodule CabinetWeb.CoreComponents do
 
   slot :col, required: true do
     attr :label, :string
+    attr :row_class, :string
   end
 
   slot :action, doc: "the slot for showing user actions in the last table column"
@@ -527,7 +528,7 @@ defmodule CabinetWeb.CoreComponents do
             >
               <div class="block py-4 pr-6">
                 <span class="absolute -inset-y-px right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
-                <span class={["relative", i == 0 && "font-semibold text-zinc-900"]}>
+                <span class={["relative", i == 0 && "font-semibold text-zinc-900", col[:row_class]]}>
                   <%= render_slot(col, @row_item.(row)) %>
                 </span>
               </div>
