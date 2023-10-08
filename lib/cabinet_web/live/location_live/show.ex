@@ -59,7 +59,6 @@ defmodule CabinetWeb.LocationLive.Show do
   def handle_event("delete", %{"id" => id}, socket) do
     product = Warehouse.get_location_product!(id)
     {:ok, _} = Warehouse.delete_location_product(product)
-    IO.inspect(socket)
 
     {:noreply, stream_delete(socket, :location_products, product)}
   end
