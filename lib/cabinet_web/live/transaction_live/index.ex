@@ -16,19 +16,19 @@ defmodule CabinetWeb.TransactionLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Transaction")
+    |> assign(:page_title, "Editar transação")
     |> assign(:transaction, Warehouse.get_transaction!(id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Transaction")
+    |> assign(:page_title, "Nova transação")
     |> assign(:transaction, %Transaction{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Transactions")
+    |> assign(:page_title, "Transações")
     |> assign(:transaction, nil)
   end
 
