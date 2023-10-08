@@ -26,7 +26,7 @@
     <div class="sr-only">
       <.link navigate={~p"/products/#{product}"}>Ver</.link>
     </div>
-     <.link patch={~p"/products/#{product}/edit"}>Editar</.link>
+     <.link patch={~p"/products/#{product}/edit"}><.icon name="hero-pencil" /></.link>
   </:action>
   
   <:action :let={{id, product}}>
@@ -34,7 +34,7 @@
       phx-click={JS.push("delete", value: %{id: product.id}) |> hide("##{id}")}
       data-confirm="Você tem certeza?"
     >
-      Deletar
+      <.icon name="hero-trash" />
     </.link>
   </:action>
 </.table>

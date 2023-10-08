@@ -37,7 +37,7 @@
       phx-click={JS.push("delete", value: %{id: location_product.id}) |> hide("##{id}")}
       data-confirm="Você tem certeza?"
     >
-      Deletar
+      <.icon name="hero-trash" />
     </.link>
   </:action>
 </.table>
