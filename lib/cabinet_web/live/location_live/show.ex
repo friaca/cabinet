@@ -55,6 +55,15 @@ defmodule CabinetWeb.LocationLive.Show do
     {:noreply, stream_insert(socket, :location_products, location_product)}
   end
 
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    product = Warehouse.get_location_product!(id)
+    {:ok, _} = Warehouse.delete_location_product(product)
+    IO.inspect(socket)
+
+    {:noreply, stream_delete(socket, :location_products, product)}
+  end
+
   defp page_title(:show), do: "Localização"
   defp page_title(:edit), do: "Editar localização"
   defp page_title(:new_product), do: "Adicionar produto"
