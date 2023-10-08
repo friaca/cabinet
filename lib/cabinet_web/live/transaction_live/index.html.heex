@@ -13,20 +13,28 @@
   row_click={fn {_id, transaction} -> JS.navigate(~p"/transactions/#{transaction}") end}
 >
   <:col :let={{_id, transaction}} label="Data"><%= Helpers.format_date(transaction.date) %></:col>
-  <:col :let={{_id, transaction}} label="Produto">
+  
+  <:col :let={{_id, transaction}} label="Produto" row_class="truncate">
     <%= Warehouse.get_product!(transaction.product_id).name || "" %>
   </:col>
+  
   <:col :let={{_id, transaction}} label="Localização">
     <%= Warehouse.get_location!(transaction.location_id).name || "" %>
   </:col>
+  
   <:col :let={{_id, transaction}} label="Quantidade"><%= transaction.amount %></:col>
-  <:col :let={{_id, transaction}} label="Notas"><%= transaction.notes %></:col>
+  
+  <:col :let={{_id, transaction}} label="Notas" row_class="truncate">
+    <%= transaction.notes %>
+  </:col>
+  
   <:action :let={{_id, transaction}}>
     <div class="sr-only">
       <.link navigate={~p"/transactions/#{transaction}"}>Ver</.link>
     </div>
-    <.link patch={~p"/transactions/#{transaction}/edit"}>Editar</.link>
+     <.link patch={~p"/transactions/#{transaction}/edit"}>Editar</.link>
   </:action>
+  
   <:action :let={{id, transaction}}>
     <.link
       phx-click={JS.push("delete", value: %{id: transaction.id}) |> hide("##{id}")}

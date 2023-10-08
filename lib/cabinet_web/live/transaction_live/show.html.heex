@@ -1,6 +1,5 @@
 <.header>
   Transação
-  <:subtitle><%= @transaction.id %></:subtitle>
   <:actions>
     <.link patch={~p"/transactions/#{@transaction}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Editar transação</.button>
@@ -10,11 +9,21 @@
 
 <.list>
   <:item title="Data"><%= Helpers.format_date(@transaction.date) %></:item>
-  <:item title="Produto"><%= Warehouse.get_product!(@transaction.product_id).name %></:item>
-  <:item title="Localização">
-    <%= Warehouse.get_location!(@transaction.location_id).name %>
+  
+  <:item title="Produto">
+    <.link href={~p"/products/#{@transaction.product_id}"}>
+      <%= Warehouse.get_product!(@transaction.product_id).name %> <.icon name="hero-link" />
+    </.link>
   </:item>
+  
+  <:item title="Localização">
+    <.link href={~p"/locations/#{@transaction.location_id}"}>
+      <%= Warehouse.get_location!(@transaction.location_id).name %> <.icon name="hero-link" />
+    </.link>
+  </:item>
+  
   <:item title="Quantidade"><%= @transaction.amount %></:item>
+  
   <:item title="Notas"><%= @transaction.notes %></:item>
 </.list>
 
