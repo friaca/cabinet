@@ -8,11 +8,25 @@
 </.header>
 
 <.list>
-  <:item title="Nome"><%= @product.name %></:item>
+  <:item title="Nome">
+    <%= @product.name %>
+  </:item>
   
-  <:item title="Tipo"><%= Product.translate_enum(:type, @product.type) %></:item>
+  <:item title="Tipo">
+    <%= Product.translate_enum(:type, @product.type) %>
+  </:item>
   
-  <:item title="Listagem"><%= Product.translate_enum(:list_by, @product.list_by) %></:item>
+  <:item title="Listagem">
+    <%= Product.translate_enum(:list_by, @product.list_by) %>
+  </:item>
+  
+  <:item title="Localizações com esse produto em estoque">
+    <div class="flex flex-col">
+      <span :for={location <- list_locations_with_product(@product.id)}>
+        <%= location.name %>
+      </span>
+    </div>
+  </:item>
 </.list>
 
 <.back navigate={~p"/products"}>Voltar para Produtos</.back>

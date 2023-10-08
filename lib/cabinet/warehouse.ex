@@ -297,6 +297,24 @@ defmodule Cabinet.Warehouse do
   end
 
   @doc """
+  Returns the list of locations with said product.
+  
+  ## Examples
+  
+      iex> list_locations_with_product(123)
+      [%Location{}, ...]
+  
+  """
+  def list_locations_with_product(product_id) do
+    Repo.all(
+      from l in Location,
+        join: lp in LocationProduct,
+        on: lp.location_id == l.id,
+        where: lp.product_id == ^product_id
+    )
+  end
+
+  @doc """
   Gets a single location.
   
   Raises `Ecto.NoResultsError` if the Location does not exist.

@@ -19,5 +19,9 @@ defmodule CabinetWeb.ProductLive.Show do
      |> assign(:product, product)}
   end
 
+  def list_locations_with_product(product_id) do
+    Warehouse.list_locations_with_product(product_id)
+  end
+
   defp page_title(_action, product), do: product.name
 end
