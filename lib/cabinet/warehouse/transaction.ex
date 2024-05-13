@@ -31,6 +31,16 @@ defmodule Cabinet.Warehouse.Transaction do
     |> validate_amount(attrs)
   end
 
+  def changeset_from_location_product(transaction, attrs) do
+    transaction
+    |> cast(attrs, [:product_id, :location_id])
+    # TODO: Deal with timezone correctly
+    |> cast(%{date: Timex.now("America/Sao_Paulo")}, [:date])
+    |> cast(%{amount: attrs["current_amount"]}, [:amount])
+    |> validate_required([:product_id, :location_id, :amount])
+    |> validate_amount(attrs)
+  end
+
   defp validate_amount(%{valid?: false} = changeset, _attrs), do: changeset
 
   defp validate_amount(changeset, attrs) when map_size(attrs) == 0 do
@@ -83,4 +93,7 @@ defmodule Cabinet.Warehouse.Transaction do
       amount2 == amount1 -> amount1
     end
   end
+
+  def times(%Decimal{} = num1, num2), do: Decimal.mult(num1, Decimal.new(num2))
+  def times(num1, num2), do: num1 * num2
 end

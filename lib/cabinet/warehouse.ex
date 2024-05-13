@@ -506,12 +506,24 @@ defmodule Cabinet.Warehouse do
   
   """
   def create_location_product(attrs \\ %{}) do
-    %LocationProduct{}
-    |> LocationProduct.changeset(attrs)
-    |> Repo.insert()
+    location_product_changeset =
+      %LocationProduct{}
+      |> LocationProduct.changeset(attrs)
+
+    transaction_changeset =
+      %Transaction{}
+      |> Transaction.changeset_from_location_product(attrs)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:location_product, location_product_changeset)
+    |> Ecto.Multi.insert(:transaction, transaction_changeset)
+    |> Repo.transaction()
     |> case do
-      {:ok, lp} -> {:ok, Repo.preload(lp, [:product, :location])}
-      {:error, changeset} -> {:error, changeset}
+      {:ok, %{transaction: _transaction, location_product: location_product}} ->
+        {:ok, Repo.preload(location_product, [:product, :location])}
+
+      {:error, error} ->
+        Repo.rollback(error)
     end
   end
 
@@ -550,7 +562,27 @@ defmodule Cabinet.Warehouse do
   
   """
   def delete_location_product(%LocationProduct{} = location_product) do
-    Repo.delete(location_product)
+    attrs = %{
+      "current_amount" => Transaction.times(location_product.current_amount, -1),
+      "product_id" => location_product.product_id,
+      "location_id" => location_product.location_id
+    }
+
+    transaction_changeset =
+      %Transaction{}
+      |> Transaction.changeset_from_location_product(attrs)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.delete(:location_product, location_product)
+    |> Ecto.Multi.insert(:transaction, transaction_changeset)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{transaction: _transaction, location_product: location_product}} ->
+        {:ok, location_product}
+
+      {:error, error} ->
+        Repo.rollback(error)
+    end
   end
 
   @doc """
