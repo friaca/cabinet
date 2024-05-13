@@ -40,6 +40,7 @@ defmodule CabinetWeb.LocationProductLive.FormComponent do
           type="number"
           label="Quantidade Inicial"
           step="any"
+          disabled={Helpers.nil_or_empty?(@location_product_form[:product_id].value)}
           warnings={initial_amount_warnings(@action)}
         />
         <%= unless @action == :new_product do %>
