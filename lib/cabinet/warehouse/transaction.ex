@@ -37,7 +37,7 @@ defmodule Cabinet.Warehouse.Transaction do
     # TODO: Deal with timezone correctly
     |> cast(%{date: Timex.now("America/Sao_Paulo")}, [:date])
     |> cast(%{amount: attrs["current_amount"]}, [:amount])
-    |> validate_required([:product_id, :location_id, :amount])
+    |> validate_required([:product_id, :location_id, :amount, :date])
     |> validate_amount(attrs)
   end
 
