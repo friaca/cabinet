@@ -50,7 +50,8 @@ defmodule Cabinet.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:pbkdf2_elixir, "~> 2.2"}
+      {:pbkdf2_elixir, "~> 2.2"},
+      {:timex, "~> 3.0"}
     ]
   end
 
