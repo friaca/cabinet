@@ -8,20 +8,15 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
   def render(assigns) do
     assigns =
       assigns
-      |> assign_new(:product_options, fn ->
-        if assigns.action == :edit do
-          get_product_options(assigns.form, assigns.form.data.location_id)
-        else
-          []
-        end
-      end)
+      |> assign_new(:product_options, fn -> assign_product_options(assigns) end)
+      |> assign_new(:valid_location, fn -> assign_valid_location(assigns) end)
 
     ~H"""
     <div>
       <.header>
         <%= @title %>
       </.header>
-
+      
       <.simple_form
         for={@form}
         id="transaction-form"
@@ -43,8 +38,9 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
           label="Produto"
           options={@product_options}
           prompt="Escolha um valor"
-        />
-        <.input field={@form[:date]} type="date" label="Data" />
+          disabled={!@valid_location}
+          class={if !@valid_location, do: "bg-slate-200"}
+        /> <.input field={@form[:date]} type="date" label="Data" />
         <.input field={@form[:amount]} type="number" label="Quantidade" step="any" />
         <.input field={@form[:notes]} type="text" label="Notas" />
         <:actions>
@@ -85,7 +81,38 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
         socket
       ) do
     product_options = get_product_options(socket.assigns.form, location_id)
-    {:noreply, assign(socket, :product_options, product_options)}
+
+    socket =
+      socket
+      |> assign(:product_options, product_options)
+      |> put_location_id_changeset(location_id)
+
+    {:noreply, socket}
+  end
+
+  defp put_location_id_changeset(socket, location_id) do
+    changeset =
+      socket.assigns.transaction
+      |> Warehouse.change_transaction(%{"location_id" => location_id})
+      |> Map.put(:action, :validate)
+
+    assign_form(socket, changeset)
+  end
+
+  defp assign_valid_location(assigns) do
+    if assigns.action == :new do
+      !Helpers.nil_or_empty?(Map.get(assigns.form.params, "location_id"))
+    else
+      true
+    end
+  end
+
+  defp assign_product_options(assigns) do
+    if assigns.action == :edit do
+      get_product_options(assigns.form, assigns.form.data.location_id)
+    else
+      []
+    end
   end
 
   defp save_transaction(socket, :edit, transaction_params) do
@@ -117,6 +144,8 @@ defmodule CabinetWeb.TransactionLive.FormComponent do
         {:noreply, assign_form(socket, changeset)}
     end
   end
+
+  defp get_product_options(_form, ""), do: []
 
   defp get_product_options(form, location_id) do
     LocationProduct.get_location_products_options(form, location_id)
