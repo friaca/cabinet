@@ -10,7 +10,7 @@ defmodule CabinetWeb.LocationLive.FormComponent do
       <.header>
         <%= @title %>
       </.header>
-
+      
       <.simple_form
         for={@form}
         id="location-form"
@@ -19,6 +19,12 @@ defmodule CabinetWeb.LocationLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Nome" />
+        <.input
+          field={@form[:active]}
+          type="select"
+          label="Ativo"
+          options={location_active_select_options(@form)}
+        />
         <:actions>
           <.button phx-disable-with="Salvando...">Salvar localização</.button>
         </:actions>
@@ -48,7 +54,14 @@ defmodule CabinetWeb.LocationLive.FormComponent do
   end
 
   def handle_event("save", %{"location" => location_params}, socket) do
+    location_params = parse_active(location_params)
     save_location(socket, socket.assigns.action, location_params)
+  end
+
+  defp parse_active(params) do
+    IO.inspect(params)
+
+    Map.update(params, "active", true, fn value -> Helpers.convert!(value) end) |> IO.inspect()
   end
 
   defp save_location(socket, :edit, location_params) do
@@ -83,6 +96,13 @@ defmodule CabinetWeb.LocationLive.FormComponent do
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
     assign(socket, :form, to_form(changeset))
+  end
+
+  defp location_active_select_options(form) do
+    [
+      [key: "Sim", value: 1, selected: Map.fetch!(form.data, :active) == true],
+      [key: "Não", value: 0, selected: Map.fetch!(form.data, :active) == false]
+    ]
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})

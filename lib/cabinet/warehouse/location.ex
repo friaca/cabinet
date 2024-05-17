@@ -6,6 +6,7 @@ defmodule Cabinet.Warehouse.Location do
   @foreign_key_type :binary_id
   schema "locations" do
     field :name, :string
+    field :active, :boolean, default: true
 
     timestamps()
   end
@@ -13,8 +14,8 @@ defmodule Cabinet.Warehouse.Location do
   @doc false
   def changeset(location, attrs) do
     location
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :active])
+    |> validate_required([:name, :active])
   end
 
   def get_location_options(form) when is_map(form) do
